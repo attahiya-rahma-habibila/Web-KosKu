@@ -226,12 +226,12 @@
                         </span>
 
                         <input
-                            type="number"
+                            type="text"
                             name="harga"
+                            id="harga"
                             class="form-control"
-                            placeholder="Contoh: 750000"
+                            placeholder="Contoh: 750.000"
                             value="{{ old('harga') }}"
-                            min="0"
                             required
                         >
 
@@ -507,6 +507,41 @@ document.addEventListener(
                     'Longitude: ' + lng
 
                 ).openPopup();
+
+            }
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | FORMAT HARGA OTOMATIS
+        |--------------------------------------------------------------------------
+        */
+
+        const hargaInput =
+            document.getElementById('harga');
+
+
+        hargaInput.addEventListener(
+            'input',
+            function () {
+
+                let angka =
+                    this.value.replace(/\D/g, '');
+
+
+                if (angka === '') {
+
+                    this.value = '';
+
+                    return;
+
+                }
+
+
+                this.value =
+                    new Intl.NumberFormat('id-ID')
+                        .format(angka);
 
             }
         );

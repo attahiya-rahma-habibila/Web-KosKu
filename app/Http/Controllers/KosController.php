@@ -48,6 +48,15 @@ class KosController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge([
+            'harga' => str_replace(
+                '.',
+                '',
+                $request->harga
+            ),
+        ]);
+
+
         $request->validate([
 
             'nama_kos' => 'required|string|max:255',
@@ -319,6 +328,15 @@ class KosController extends Controller
         Request $request,
         Kos $kos
     ) {
+
+        $request->merge([
+            'harga' => str_replace(
+                '.',
+                '',
+                $request->harga
+            ),
+        ]);
+
 
         $request->validate([
 

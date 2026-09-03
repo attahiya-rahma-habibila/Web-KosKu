@@ -129,11 +129,12 @@
                     </label>
 
                     <input
-                        type="number"
+                        type="text"
                         name="harga"
+                        id="harga"
                         class="form-control"
-                        value="{{ old('harga', $kamar->harga) }}"
-                        min="0"
+                        value="{{ old('harga', number_format($kamar->harga, 0, ',', '.')) }}"
+                        placeholder="Contoh: 750.000"
                         required
                     >
 
@@ -195,5 +196,45 @@
     </div>
 
 </div>
+
+
+<script>
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        const hargaInput =
+            document.getElementById('harga');
+
+
+        hargaInput.addEventListener(
+            'input',
+            function () {
+
+                let angka =
+                    this.value.replace(/\D/g, '');
+
+
+                if (angka === '') {
+
+                    this.value = '';
+
+                    return;
+
+                }
+
+
+                this.value =
+                    new Intl.NumberFormat('id-ID')
+                        .format(angka);
+
+            }
+        );
+
+    }
+);
+
+</script>
 
 @endsection

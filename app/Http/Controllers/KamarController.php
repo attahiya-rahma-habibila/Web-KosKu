@@ -53,6 +53,15 @@ class KamarController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge([
+            'harga' => str_replace(
+                '.',
+                '',
+                $request->harga
+            ),
+        ]);
+
+
         $request->validate([
             'kos_id' => [
                 'required',
@@ -153,6 +162,15 @@ class KamarController extends Controller
         Request $request,
         Kamar $kamar
     ) {
+
+        $request->merge([
+            'harga' => str_replace(
+                '.',
+                '',
+                $request->harga
+            ),
+        ]);
+
 
         $request->validate([
             'kos_id' => [
