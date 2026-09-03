@@ -69,11 +69,22 @@
         color: #475569;
         font-weight: 500;
         margin: 0 8px;
-        transition: 0.2s;
+        padding: 8px 14px !important;
+        border-radius: 8px;
+        transition: all 0.2s ease;
     }
 
     .nav-link:hover {
         color: #0f172a;
+        background: #f1f5f9;
+    }
+
+    /* MENU ACTIVE */
+
+    .nav-link.active {
+        color: #0f172a !important;
+        background: #e2e8f0;
+        font-weight: 700;
     }
 
     .btn-login {
@@ -1127,7 +1138,8 @@ NAVBAR
 
                     <a
                         href="#home"
-                        class="nav-link"
+                        class="nav-link active"
+                        data-section="home"
                     >
                         Home
                     </a>
@@ -1140,6 +1152,7 @@ NAVBAR
                     <a
                         href="#kos"
                         class="nav-link"
+                        data-section="kos"
                     >
                         Cari Kos
                     </a>
@@ -1152,6 +1165,7 @@ NAVBAR
                     <a
                         href="#keunggulan"
                         class="nav-link"
+                        data-section="keunggulan"
                     >
                         Keunggulan
                     </a>
@@ -1164,6 +1178,7 @@ NAVBAR
                     <a
                         href="#tentang"
                         class="nav-link"
+                        data-section="tentang"
                     >
                         Tentang
                     </a>
@@ -2109,6 +2124,119 @@ document.addEventListener('DOMContentLoaded', function () {
         function () {
 
             cariKos();
+
+        }
+    );
+
+});
+
+</script>
+
+
+{{-- =========================================================
+ACTIVE NAVBAR MENU
+========================================================= --}}
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const navLinks =
+        document.querySelectorAll(
+            '.navbar-nav .nav-link[data-section]'
+        );
+
+
+    const sections =
+        document.querySelectorAll(
+            '#home, #kos, #keunggulan, #tentang'
+        );
+
+
+    function setActiveMenu(sectionId) {
+
+        navLinks.forEach(function (link) {
+
+            link.classList.remove('active');
+
+        });
+
+
+        const activeLink =
+            document.querySelector(
+                '.nav-link[data-section="' +
+                sectionId +
+                '"]'
+            );
+
+
+        if (activeLink) {
+
+            activeLink.classList.add('active');
+
+        }
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | KLIK MENU
+    |--------------------------------------------------------------------------
+    */
+
+    navLinks.forEach(function (link) {
+
+        link.addEventListener(
+            'click',
+            function () {
+
+                const sectionId =
+                    this.dataset.section;
+
+
+                setActiveMenu(sectionId);
+
+            }
+        );
+
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ACTIVE OTOMATIS SAAT SCROLL
+    |--------------------------------------------------------------------------
+    */
+
+    window.addEventListener(
+        'scroll',
+        function () {
+
+            let currentSection = 'home';
+
+
+            sections.forEach(function (section) {
+
+                const sectionTop =
+                    section.offsetTop - 150;
+
+
+                if (
+                    window.scrollY >= sectionTop
+                ) {
+
+                    currentSection =
+                        section.id;
+
+                }
+
+            });
+
+
+            setActiveMenu(
+                currentSection
+            );
 
         }
     );
