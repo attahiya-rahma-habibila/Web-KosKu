@@ -514,6 +514,144 @@ document.addEventListener(
 
         /*
         |--------------------------------------------------------------------------
+        | ALAMAT OTOMATIS KE MAP
+        |--------------------------------------------------------------------------
+        */
+
+        const alamatInput =
+            document.querySelector(
+                'textarea[name="alamat"]'
+            );
+
+
+        let timeoutAlamat;
+
+
+        alamatInput.addEventListener(
+            'input',
+            function () {
+
+                clearTimeout(
+                    timeoutAlamat
+                );
+
+
+                const alamat =
+                    this.value.trim();
+
+
+                if (alamat.length < 5) {
+
+                    return;
+
+                }
+
+
+                timeoutAlamat =
+                    setTimeout(
+                        function () {
+
+                            fetch(
+                                'https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=id&q=' +
+                                encodeURIComponent(alamat)
+                            )
+                            .then(
+                                response =>
+                                    response.json()
+                            )
+                            .then(
+                                data => {
+
+                                    if (
+                                        data.length === 0
+                                    ) {
+
+                                        return;
+
+                                    }
+
+
+                                    const lat =
+                                        parseFloat(
+                                            data[0].lat
+                                        );
+
+
+                                    const lng =
+                                        parseFloat(
+                                            data[0].lon
+                                        );
+
+
+                                    document.getElementById(
+                                        'latitude'
+                                    ).value =
+                                        lat.toFixed(7);
+
+
+                                    document.getElementById(
+                                        'longitude'
+                                    ).value =
+                                        lng.toFixed(7);
+
+
+                                    if (marker) {
+
+                                        map.removeLayer(
+                                            marker
+                                        );
+
+                                    }
+
+
+                                    marker =
+                                        L.marker([
+                                            lat,
+                                            lng
+                                        ])
+                                        .addTo(map);
+
+
+                                    marker.bindPopup(
+
+                                        '<strong>Lokasi Kos</strong>' +
+                                        '<br>' +
+                                        data[0].display_name
+
+                                    ).openPopup();
+
+
+                                    map.setView(
+                                        [
+                                            lat,
+                                            lng
+                                        ],
+                                        16
+                                    );
+
+                                }
+                            )
+                            .catch(
+                                error => {
+
+                                    console.error(
+                                        'Gagal mencari alamat:',
+                                        error
+                                    );
+
+                                }
+                            );
+
+                        },
+                        1200
+                    );
+
+            }
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
         | FORMAT HARGA OTOMATIS
         |--------------------------------------------------------------------------
         */
