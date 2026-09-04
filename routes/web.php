@@ -393,6 +393,11 @@ Route::middleware('auth')->group(function () {
         [KamarController::class, 'destroy']
     )->name('admin.kamar.destroy');
 
+    Route::delete(
+    '/admin/data/foto/{foto}',
+    [KosController::class, 'hapusFoto']
+    )->name('admin.data.foto.destroy');
+
 
     /*
     |--------------------------------------------------------------------------

@@ -44,6 +44,18 @@
     @endif
 
 
+    {{-- SUCCESS --}}
+    @if(session('success'))
+
+        <div class="alert alert-success">
+
+            {{ session('success') }}
+
+        </div>
+
+    @endif
+
+
     <div class="card border-0 shadow-sm">
 
         <div class="card-body p-4">
@@ -267,23 +279,35 @@
                         </label>
 
 
-                        <div class="d-flex flex-wrap gap-3 mt-2">
+                        <div
+                            id="fotoContainer"
+                            class="d-flex flex-wrap gap-3 mt-2"
+                        >
 
                             @foreach($kos->fotoKoss as $foto)
 
-                                <div>
+                                <div
+                                    class="foto-item"
+                                    id="foto-{{ $foto->id }}"
+                                >
 
                                     <img
                                         src="{{ asset('kos/' . $foto->foto) }}"
                                         alt="{{ $kos->nama_kos }}"
-                                        width="180"
-                                        height="130"
-                                        style="
-                                            object-fit:cover;
-                                            border-radius:10px;
-                                            border:1px solid #e2e8f0;
-                                        "
                                     >
+
+
+                                    {{-- TOMBOL X --}}
+                                    <button
+                                        type="button"
+                                        class="btn-hapus-foto"
+                                        onclick="hapusFoto({{ $foto->id }})"
+                                        title="Hapus foto"
+                                    >
+
+                                        <i class="bi bi-x-lg"></i>
+
+                                    </button>
 
                                 </div>
 
@@ -295,6 +319,7 @@
 
                 @elseif($kos->foto)
 
+                    {{-- FOTO LAMA DARI KOLOM FOTO --}}
                     <div class="mb-4">
 
                         <label class="form-label fw-semibold">
@@ -383,6 +408,139 @@
 </div>
 
 
+<style>
+
+/*
+|--------------------------------------------------------------------------
+| TOMBOL X FOTO
+|--------------------------------------------------------------------------
+*/
+
+.btn-hapus-foto {
+
+    position: absolute;
+
+    top: 7px;
+
+    right: 7px;
+
+    width: 28px;
+
+    height: 28px;
+
+    padding: 0;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: rgba(15, 23, 42, .9);
+
+    color: #ffffff;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 12px;
+
+    cursor: pointer;
+
+    z-index: 5;
+
+    transition:
+        background .2s ease,
+        transform .2s ease;
+
+}
+
+
+.btn-hapus-foto:hover {
+
+    background: #dc2626;
+
+    color: #ffffff;
+
+    transform: scale(1.08);
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| FOTO
+|--------------------------------------------------------------------------
+*/
+
+.foto-item {
+
+    position: relative;
+
+    width: 180px;
+
+    height: 130px;
+
+    transition:
+        opacity .2s ease,
+        transform .2s ease;
+
+}
+
+
+.foto-item img {
+
+    width: 180px;
+
+    height: 130px;
+
+    object-fit: cover;
+
+    border-radius: 10px;
+
+    border: 1px solid #e2e8f0;
+
+    display: block;
+
+}
+
+
+.foto-item.menghapus {
+
+    opacity: 0;
+
+    transform: scale(.85);
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| BUTTON SIMPAN
+|--------------------------------------------------------------------------
+*/
+
+.btn-primary {
+
+    background: #0f172a;
+
+    border-color: #0f172a;
+
+}
+
+
+.btn-primary:hover {
+
+    background: #1e293b;
+
+    border-color: #1e293b;
+
+}
+
+</style>
+
+
 {{-- LEAFLET --}}
 
 <link
@@ -400,6 +558,12 @@
 document.addEventListener(
     'DOMContentLoaded',
     function () {
+
+        /*
+        |--------------------------------------------------------------------------
+        | MAP
+        |--------------------------------------------------------------------------
+        */
 
         const latitudeInput =
             document.getElementById(
@@ -714,6 +878,125 @@ document.addEventListener(
 
     }
 );
+
+
+/*
+|--------------------------------------------------------------------------
+| HAPUS FOTO TANPA RELOAD
+|--------------------------------------------------------------------------
+*/
+
+function hapusFoto(id)
+{
+
+    const foto =
+        document.getElementById(
+            'foto-' + id
+        );
+
+
+    if (!foto) {
+
+        return;
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SIMPAN POSISI ASLI
+    |--------------------------------------------------------------------------
+    */
+
+    foto.classList.add(
+        'menghapus'
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | HAPUS DARI DATABASE
+    |--------------------------------------------------------------------------
+    */
+
+    fetch(
+        "{{ url('/admin/data/foto') }}/" + id,
+        {
+
+            method: 'DELETE',
+
+            headers: {
+
+                'X-CSRF-TOKEN':
+                    '{{ csrf_token() }}',
+
+                'Accept':
+                    'application/json',
+
+                'X-Requested-With':
+                    'XMLHttpRequest'
+
+            }
+
+        }
+    )
+    .then(
+        response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    'Gagal menghapus foto.'
+                );
+
+            }
+
+
+            return response.json();
+
+        }
+    )
+    .then(
+        data => {
+
+            /*
+            |--------------------------------------------------------------------------
+            | HAPUS DARI HTML
+            |--------------------------------------------------------------------------
+            */
+
+            foto.remove();
+
+        }
+    )
+    .catch(
+        error => {
+
+            console.error(
+                'Gagal menghapus foto:',
+                error
+            );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | KALAU GAGAL, FOTO DIKEMBALIKAN
+            |--------------------------------------------------------------------------
+            */
+
+            foto.classList.remove(
+                'menghapus'
+            );
+
+
+            alert(
+                'Foto gagal dihapus.'
+            );
+
+        }
+    );
+
+}
 
 </script>
 

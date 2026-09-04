@@ -48,6 +48,12 @@ class KosController extends Controller
 
     public function store(Request $request)
     {
+        /*
+        |--------------------------------------------------------------------------
+        | BERSIHKAN FORMAT HARGA
+        |--------------------------------------------------------------------------
+        */
+
         $request->merge([
             'harga' => str_replace(
                 '.',
@@ -56,6 +62,12 @@ class KosController extends Controller
             ),
         ]);
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDASI
+        |--------------------------------------------------------------------------
+        */
 
         $request->validate([
 
@@ -137,7 +149,6 @@ class KosController extends Controller
 
             'foto.*.max' =>
                 'Setiap foto maksimal 2 MB.',
-
         ]);
 
 
@@ -167,24 +178,32 @@ class KosController extends Controller
 
         $kos = Kos::create([
 
-            'nama_kos' => $request->nama_kos,
+            'nama_kos' =>
+                $request->nama_kos,
 
-            'pemilik' => $request->pemilik,
+            'pemilik' =>
+                $request->pemilik,
 
-            'no_hp' => $request->no_hp,
+            'no_hp' =>
+                $request->no_hp,
 
-            'alamat' => $request->alamat,
+            'alamat' =>
+                $request->alamat,
 
-            'latitude' => $request->latitude,
+            'latitude' =>
+                $request->latitude,
 
-            'longitude' => $request->longitude,
+            'longitude' =>
+                $request->longitude,
 
-            'harga' => $request->harga,
+            'harga' =>
+                $request->harga,
 
-            'deskripsi' => $request->deskripsi,
+            'deskripsi' =>
+                $request->deskripsi,
 
-            'foto' => null,
-
+            'foto' =>
+                null,
         ]);
 
 
@@ -199,7 +218,6 @@ class KosController extends Controller
         if (!is_array($files)) {
 
             $files = [$files];
-
         }
 
 
@@ -208,9 +226,14 @@ class KosController extends Controller
             if (!$file || !$file->isValid()) {
 
                 continue;
-
             }
 
+
+            /*
+            |--------------------------------------------------------------------------
+            | BUAT NAMA FILE UNIK
+            |--------------------------------------------------------------------------
+            */
 
             $namaFoto =
                 time() .
@@ -220,42 +243,62 @@ class KosController extends Controller
                 $file->getClientOriginalName();
 
 
+            /*
+            |--------------------------------------------------------------------------
+            | PINDAHKAN FILE KE PUBLIC/KOS
+            |--------------------------------------------------------------------------
+            */
+
             $file->move(
                 $folderFoto,
                 $namaFoto
             );
 
 
+            /*
+            |--------------------------------------------------------------------------
+            | SIMPAN KE DATABASE
+            |--------------------------------------------------------------------------
+            */
+
             FotoKos::create([
 
-                'kos_id' => $kos->id,
+                'kos_id' =>
+                    $kos->id,
 
-                'foto' => $namaFoto,
-
+                'foto' =>
+                    $namaFoto,
             ]);
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | FOTO PERTAMA DISIMPAN DI KOLOM LAMA
+        | FOTO PERTAMA MENJADI FOTO UTAMA
         |--------------------------------------------------------------------------
         */
 
         $fotoPertama =
-            $kos->fotoKoss()->first();
+            $kos->fotoKoss()
+                ->orderBy('id')
+                ->first();
 
 
         if ($fotoPertama) {
 
             $kos->update([
 
-                'foto' => $fotoPertama->foto,
-
+                'foto' =>
+                    $fotoPertama->foto,
             ]);
-
         }
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | REDIRECT
+        |--------------------------------------------------------------------------
+        */
 
         return redirect()
             ->route('admin.data')
@@ -288,6 +331,12 @@ class KosController extends Controller
         ->get();
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | LOAD SEMUA FOTO
+        |--------------------------------------------------------------------------
+        */
+
         $kos->load('fotoKoss');
 
 
@@ -309,7 +358,14 @@ class KosController extends Controller
 
     public function edit(Kos $kos)
     {
+        /*
+        |--------------------------------------------------------------------------
+        | LOAD FOTO
+        |--------------------------------------------------------------------------
+        */
+
         $kos->load('fotoKoss');
+
 
         return view(
             'admin.kos.edit',
@@ -329,6 +385,12 @@ class KosController extends Controller
         Kos $kos
     ) {
 
+        /*
+        |--------------------------------------------------------------------------
+        | BERSIHKAN FORMAT HARGA
+        |--------------------------------------------------------------------------
+        */
+
         $request->merge([
             'harga' => str_replace(
                 '.',
@@ -337,6 +399,12 @@ class KosController extends Controller
             ),
         ]);
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDASI
+        |--------------------------------------------------------------------------
+        */
 
         $request->validate([
 
@@ -418,7 +486,6 @@ class KosController extends Controller
 
             'foto.*.max' =>
                 'Setiap foto maksimal 2 MB.',
-
         ]);
 
 
@@ -430,22 +497,29 @@ class KosController extends Controller
 
         $kos->update([
 
-            'nama_kos' => $request->nama_kos,
+            'nama_kos' =>
+                $request->nama_kos,
 
-            'pemilik' => $request->pemilik,
+            'pemilik' =>
+                $request->pemilik,
 
-            'no_hp' => $request->no_hp,
+            'no_hp' =>
+                $request->no_hp,
 
-            'alamat' => $request->alamat,
+            'alamat' =>
+                $request->alamat,
 
-            'latitude' => $request->latitude,
+            'latitude' =>
+                $request->latitude,
 
-            'longitude' => $request->longitude,
+            'longitude' =>
+                $request->longitude,
 
-            'harga' => $request->harga,
+            'harga' =>
+                $request->harga,
 
-            'deskripsi' => $request->deskripsi,
-
+            'deskripsi' =>
+                $request->deskripsi,
         ]);
 
 
@@ -478,7 +552,6 @@ class KosController extends Controller
         if (!is_array($files)) {
 
             $files = [$files];
-
         }
 
 
@@ -487,9 +560,14 @@ class KosController extends Controller
             if (!$file || !$file->isValid()) {
 
                 continue;
-
             }
 
+
+            /*
+            |--------------------------------------------------------------------------
+            | NAMA FILE UNIK
+            |--------------------------------------------------------------------------
+            */
 
             $namaFoto =
                 time() .
@@ -499,18 +577,31 @@ class KosController extends Controller
                 $file->getClientOriginalName();
 
 
+            /*
+            |--------------------------------------------------------------------------
+            | PINDAHKAN FILE
+            |--------------------------------------------------------------------------
+            */
+
             $file->move(
                 $folderFoto,
                 $namaFoto
             );
 
 
+            /*
+            |--------------------------------------------------------------------------
+            | SIMPAN FOTO KE DATABASE
+            |--------------------------------------------------------------------------
+            */
+
             FotoKos::create([
 
-                'kos_id' => $kos->id,
+                'kos_id' =>
+                    $kos->id,
 
-                'foto' => $namaFoto,
-
+                'foto' =>
+                    $namaFoto,
             ]);
         }
 
@@ -522,19 +613,34 @@ class KosController extends Controller
         */
 
         $fotoPertama =
-            $kos->fotoKoss()->first();
+            $kos->fotoKoss()
+                ->orderBy('id')
+                ->first();
 
 
         if ($fotoPertama) {
 
             $kos->update([
 
-                'foto' => $fotoPertama->foto,
-
+                'foto' =>
+                    $fotoPertama->foto,
             ]);
 
+        } else {
+
+            $kos->update([
+
+                'foto' =>
+                    null,
+            ]);
         }
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | REDIRECT
+        |--------------------------------------------------------------------------
+        */
 
         return redirect()
             ->route('admin.data')
@@ -547,7 +653,118 @@ class KosController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | HAPUS
+    | HAPUS SATU FOTO
+    |--------------------------------------------------------------------------
+    */
+
+    public function hapusFoto(FotoKos $foto)
+    {
+        /*
+        |--------------------------------------------------------------------------
+        | AMBIL DATA KOS
+        |--------------------------------------------------------------------------
+        */
+
+        $kos = $foto->kos;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | HAPUS FILE DARI PUBLIC/KOS
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $foto->foto &&
+            file_exists(
+                public_path(
+                    'kos/' . $foto->foto
+                )
+            )
+        ) {
+
+            unlink(
+                public_path(
+                    'kos/' . $foto->foto
+                )
+            );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | HAPUS DATA FOTO DARI DATABASE
+        |--------------------------------------------------------------------------
+        */
+
+        $foto->delete();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | UPDATE FOTO UTAMA
+        |--------------------------------------------------------------------------
+        */
+
+        if ($kos) {
+
+            $fotoPertama =
+                $kos->fotoKoss()
+                    ->orderBy('id')
+                    ->first();
+
+
+            if ($fotoPertama) {
+
+                /*
+                |--------------------------------------------------------------------------
+                | MASIH ADA FOTO
+                |--------------------------------------------------------------------------
+                */
+
+                $kos->update([
+
+                    'foto' =>
+                        $fotoPertama->foto,
+                ]);
+
+            } else {
+
+                /*
+                |--------------------------------------------------------------------------
+                | SUDAH TIDAK ADA FOTO
+                |--------------------------------------------------------------------------
+                */
+
+                $kos->update([
+
+                    'foto' =>
+                        null,
+                ]);
+            }
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | RESPONSE JSON
+        |--------------------------------------------------------------------------
+        */
+
+        return response()->json([
+
+            'success' =>
+                true,
+
+            'message' =>
+                'Foto berhasil dihapus.',
+        ]);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | HAPUS DATA KOS
     |--------------------------------------------------------------------------
     */
 
@@ -565,7 +782,7 @@ class KosController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | HAPUS FOTO DARI FOLDER
+        | HAPUS SEMUA FILE FOTO
         |--------------------------------------------------------------------------
         */
 
@@ -585,15 +802,13 @@ class KosController extends Controller
                         'kos/' . $fotoKos->foto
                     )
                 );
-
             }
-
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | HAPUS FOTO LAMA
+        | HAPUS FOTO LAMA DARI FOLDER
         |--------------------------------------------------------------------------
         */
 
@@ -618,9 +833,7 @@ class KosController extends Controller
                         'kos/' . $kos->foto
                     )
                 );
-
             }
-
         }
 
 
@@ -632,6 +845,12 @@ class KosController extends Controller
 
         $kos->delete();
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | REDIRECT
+        |--------------------------------------------------------------------------
+        */
 
         return redirect()
             ->route('admin.data')
