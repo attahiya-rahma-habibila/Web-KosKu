@@ -13,6 +13,7 @@ use App\Http\Controllers\PengaturanController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\MetodePembayaranController;
 use App\Http\Controllers\PengajuanBerhentiController;
+use App\Http\Controllers\FeedbackController;
 
 use App\Models\Kos;
 use App\Models\Pemesanan;
@@ -289,6 +290,24 @@ Route::middleware('auth')->group(function () {
     )->name('user.pengajuan-berhenti.store');
 
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | USER - FEEDBACK KAMAR
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/feedback/{pemesananId}',
+        [FeedbackController::class, 'create']
+    )->name('user.feedback.create');
+
+    Route::post(
+        '/feedback/{pemesananId}',
+        [FeedbackController::class, 'store']
+    )->name('user.feedback.store');
+
+
     /*
     |--------------------------------------------------------------------------
     | ADMIN - DASHBOARD
@@ -553,6 +572,21 @@ Route::middleware('auth')->group(function () {
         '/admin/pembayaran/{pembayaran}',
         [PembayaranController::class, 'destroy']
     )->name('admin.pembayaran.destroy');
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN - FEEDBACK
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/admin/feedback',
+        [FeedbackController::class, 'adminIndex']
+    )->name('admin.feedback.index');
+    Route::delete('/feedback/{feedback}', [FeedbackController::class, 'destroy'])->name('admin.feedback.destroy');
+
 
 
     /*

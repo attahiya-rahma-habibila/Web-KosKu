@@ -353,14 +353,163 @@
 
 
         /* =====================================================
-           STATUS PENGAJUAN DITOLAK
+           STATUS ALERT UTAMA
+        ===================================================== */
+
+        .status-main {
+
+            width: 100%;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .status-alert {
+
+            width: 100%;
+
+            margin: 0;
+
+            padding: 11px 13px;
+
+            border-radius: 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            line-height: 1.4;
+
+        }
+
+
+        .status-alert i {
+
+            font-size: 16px;
+
+            flex-shrink: 0;
+
+        }
+
+
+        .status-alert-menunggu {
+
+            background: #fffbeb;
+
+            border: 1px solid #fde68a;
+
+            color: #92400e;
+
+        }
+
+
+        .status-alert-disetujui {
+
+            background: #f0fdf4;
+
+            border: 1px solid #bbf7d0;
+
+            color: #166534;
+
+        }
+
+
+        .status-alert-ditolak {
+
+            background: #fef2f2;
+
+            border: 1px solid #fecaca;
+
+            color: #991b1b;
+
+        }
+
+
+        .status-alert-berhenti {
+
+            background: #f8fafc;
+
+            border: 1px solid #cbd5e1;
+
+            color: #334155;
+
+        }
+
+
+        .status-alert-lain {
+
+            background: #f8fafc;
+
+            border: 1px solid #cbd5e1;
+
+            color: #334155;
+
+        }
+
+
+        /* =====================================================
+           STATUS GRID
+        ===================================================== */
+
+        .status-grid {
+
+            width: 100%;
+
+            display: grid;
+
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+
+            gap: 8px;
+
+            margin-top: 12px;
+
+        }
+
+
+        .status-grid-item {
+
+            width: 100%;
+
+            min-height: 42px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+        }
+
+
+        .status-grid .status-badge {
+
+            width: 100%;
+
+            min-height: 42px;
+
+            padding: 9px 8px;
+
+            text-align: center;
+
+        }
+
+
+        /* =====================================================
+           REJECTED NOTE
         ===================================================== */
 
         .rejected-note {
 
             width: 100%;
 
-            margin-top: 12px;
+            margin-top: 8px;
 
             background: #f8fafc;
 
@@ -373,6 +522,8 @@
             padding: 11px 13px;
 
             text-align: left;
+
+            grid-column: 1 / -1;
 
         }
 
@@ -402,10 +553,38 @@
 
 
         /* =====================================================
-           TOMBOL BAYAR
+           BUTTON AREA
+        ===================================================== */
+
+        .action-grid {
+
+            width: 100%;
+
+            display: grid;
+
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+
+            gap: 8px;
+
+        }
+
+
+        .action-grid > * {
+
+            width: 100%;
+
+        }
+
+
+        /* =====================================================
+           TOMBOL BAYAR & FEEDBACK
         ===================================================== */
 
         .btn-bayar {
+
+            width: 100%;
+
+            min-height: 42px;
 
             display: inline-flex;
 
@@ -413,11 +592,9 @@
 
             justify-content: center;
 
-            gap: 8px;
+            gap: 7px;
 
-            margin-top: 10px;
-
-            padding: 10px 18px;
+            padding: 9px 10px;
 
             border-radius: 9px;
 
@@ -427,13 +604,15 @@
 
             text-decoration: none;
 
-            font-size: 13px;
+            font-size: 12px;
 
             font-weight: 700;
 
             border: 1px solid #0f172a;
 
             transition: 0.2s;
+
+            text-align: center;
 
         }
 
@@ -455,17 +634,19 @@
 
         .btn-berhenti {
 
+            width: 100%;
+
+            min-height: 42px;
+
             display: inline-flex;
 
             align-items: center;
 
             justify-content: center;
 
-            gap: 8px;
+            gap: 7px;
 
-            margin-top: 10px;
-
-            padding: 9px 15px;
+            padding: 9px 10px;
 
             border-radius: 9px;
 
@@ -475,11 +656,15 @@
 
             border: 1px solid #dc2626;
 
-            font-size: 13px;
+            font-size: 12px;
 
             font-weight: 700;
 
             transition: 0.2s;
+
+            text-align: center;
+
+            margin-top: 0;
 
         }
 
@@ -489,6 +674,41 @@
             background: #dc2626;
 
             color: white;
+
+        }
+
+
+        /* =====================================================
+           FEEDBACK SUDAH DIKIRIM
+        ===================================================== */
+
+        .feedback-sent {
+
+            width: 100%;
+
+            min-height: 42px;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 7px;
+
+            padding: 9px 10px;
+
+            border-radius: 9px;
+
+            background: #e2e8f0;
+
+            color: #334155;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            text-align: center;
 
         }
 
@@ -504,6 +724,8 @@
             flex-direction: column;
 
             align-items: flex-end;
+
+            width: 100%;
 
         }
 
@@ -599,8 +821,17 @@
             }
 
 
+            .action-grid,
+            .status-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
             .btn-bayar,
-            .btn-berhenti {
+            .btn-berhenti,
+            .feedback-sent {
 
                 width: 100%;
 
@@ -918,223 +1149,353 @@
 
 
                     {{-- =================================================
-                         STATUS
+                         STATUS & ACTION
                     ================================================== --}}
 
                     <div class="col-lg-3 status-wrapper">
 
 
-                        {{-- MENUNGGU --}}
+                        {{-- =================================================
+                             STATUS UTAMA
+                        ================================================== --}}
+
+                        <div class="status-main">
+
+                            @if(
+                                $status === 'menunggu' ||
+                                $status === 'pending'
+                            )
+
+                                <div class="status-alert status-alert-menunggu">
+
+                                    <i class="bi bi-clock-fill"></i>
+
+                                    <span>
+                                        Status Pesanan: Menunggu
+                                    </span>
+
+                                </div>
+
+
+                            @elseif(
+                                $status === 'dikonfirmasi' ||
+                                $status === 'disetujui' ||
+                                $status === 'approved' ||
+                                $status === 'diterima'
+                            )
+
+                                <div class="status-alert status-alert-disetujui">
+
+                                    <i class="bi bi-check-circle-fill"></i>
+
+                                    <span>
+                                        Status Pesanan: Dikonfirmasi
+                                    </span>
+
+                                </div>
+
+
+                            @elseif(
+                                $status === 'ditolak' ||
+                                $status === 'rejected'
+                            )
+
+                                <div class="status-alert status-alert-ditolak">
+
+                                    <i class="bi bi-x-circle-fill"></i>
+
+                                    <span>
+                                        Status Pesanan: Ditolak
+                                    </span>
+
+                                </div>
+
+
+                            @elseif(
+                                $status === 'berhenti'
+                            )
+
+                                <div class="status-alert status-alert-berhenti">
+
+                                    <i class="bi bi-box-arrow-right"></i>
+
+                                    <span>
+                                        Status Pesanan: Sudah Berhenti Ngekos
+                                    </span>
+
+                                </div>
+
+
+                            @else
+
+                                <div class="status-alert status-alert-lain">
+
+                                    <i class="bi bi-info-circle-fill"></i>
+
+                                    <span>
+                                        Status Pesanan:
+                                        {{ ucfirst(
+                                            $pemesanan->status
+                                            ?? 'Menunggu'
+                                        ) }}
+                                    </span>
+
+                                </div>
+
+                            @endif
+
+                        </div>
+
+
+
+                        {{-- =================================================
+                             ACTION + STATUS PENGAJUAN
+                        ================================================== --}}
+
                         @if(
-                            $status === 'menunggu' ||
-                            $status === 'pending'
-                        )
-
-                            <span class="status-badge status-menunggu">
-
-                                <i class="bi bi-clock-fill"></i>
-
-                                Menunggu
-
-                            </span>
-
-
-                        {{-- DIKONFIRMASI --}}
-                        @elseif(
                             $status === 'dikonfirmasi' ||
                             $status === 'disetujui' ||
                             $status === 'approved' ||
                             $status === 'diterima'
                         )
 
-                            <span class="status-badge status-disetujui">
-
-                                <i class="bi bi-check-circle-fill"></i>
-
-                                Dikonfirmasi
-
-                            </span>
+                            <div class="status-grid">
 
 
-                            {{-- BAYAR --}}
-                            <a
-                                href="{{ route('user.pembayaran') }}"
-                                class="btn-bayar"
-                            >
+                                {{-- =================================================
+                                     BAYAR SEKARANG
+                                ================================================== --}}
 
-                                <i class="bi bi-credit-card-fill"></i>
+                                <div class="status-grid-item">
 
-                                Bayar Sekarang
+                                    <a
+                                        href="{{ route('user.pembayaran') }}"
+                                        class="btn-bayar"
+                                    >
 
-                            </a>
+                                        <i class="bi bi-credit-card-fill"></i>
+
+                                        Bayar Sekarang
+
+                                    </a>
+
+                                </div>
 
 
-                            {{-- =========================================
-                                 PENGAJUAN BERHENTI
-                            ========================================== --}}
 
-                            @if(
-                                !$pengajuanBerhenti ||
-                                $pengajuanBerhenti->status === 'ditolak'
-                            )
+                                {{-- =================================================
+                                     BERI FEEDBACK
+                                ================================================== --}}
 
-                                {{-- JIKA SEBELUMNYA DITOLAK --}}
+                                <div class="status-grid-item">
+
+                                    @if(!$pemesanan->feedback)
+
+                                        <a
+                                            href="{{ route('user.feedback.create', $pemesanan->id) }}"
+                                            class="btn-bayar"
+                                        >
+
+                                            <i class="bi bi-chat-heart-fill"></i>
+
+                                            Beri Feedback
+
+                                        </a>
+
+                                    @else
+
+                                        <span class="feedback-sent">
+
+                                            <i class="bi bi-check-circle"></i>
+
+                                            Feedback Sudah Dikirim
+
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+
+
+                                {{-- =================================================
+                                     AJUKAN BERHENTI
+                                ================================================== --}}
+
                                 @if(
-                                    $pengajuanBerhenti &&
+                                    !$pengajuanBerhenti ||
                                     $pengajuanBerhenti->status === 'ditolak'
                                 )
 
-                                    <span
-                                        class="status-badge status-ditolak mt-2"
-                                    >
+                                    <div class="status-grid-item">
 
-                                        <i class="bi bi-x-circle-fill"></i>
+                                        <button
+                                            type="button"
+                                            class="btn btn-berhenti"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#berhentiModal{{ $pemesanan->id }}"
+                                        >
 
-                                        Pengajuan Berhenti Ditolak
+                                            <i class="bi bi-box-arrow-right"></i>
 
-                                    </span>
+                                            Ajukan Berhenti
 
+                                        </button>
 
-                                    {{-- CATATAN ADMIN --}}
-                                    @if(
-                                        $pengajuanBerhenti->catatan_admin
-                                    )
+                                    </div>
 
-                                        <div class="rejected-note">
+                                @else
 
-                                            <div class="rejected-note-title">
+                                    <div class="status-grid-item">
 
-                                                <i class="bi bi-chat-left-text me-1"></i>
+                                        <span class="feedback-sent">
 
-                                                Catatan Admin
+                                            <i class="bi bi-info-circle"></i>
 
-                                            </div>
+                                            Pengajuan Diproses
 
+                                        </span>
 
-                                            <div class="rejected-note-text">
-
-                                                {{ $pengajuanBerhenti->catatan_admin }}
-
-                                            </div>
-
-                                        </div>
-
-                                    @endif
+                                    </div>
 
                                 @endif
 
 
-                                {{-- AJUKAN LAGI --}}
-                                <button
-                                    type="button"
-                                    class="btn btn-berhenti"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#berhentiModal{{ $pemesanan->id }}"
-                                >
 
-                                    <i class="bi bi-box-arrow-right"></i>
+                                {{-- =================================================
+                                     STATUS PENGAJUAN
+                                ================================================== --}}
 
-                                    Ajukan Berhenti
+                                @if(
+                                    $pengajuanBerhenti &&
+                                    $pengajuanBerhenti->status === 'menunggu'
+                                )
 
-                                </button>
+                                    <div class="status-grid-item">
 
+                                        <span class="status-badge status-menunggu">
 
-                            @elseif(
-                                $pengajuanBerhenti->status === 'menunggu'
-                            )
+                                            <i class="bi bi-clock"></i>
 
-                                <span
-                                    class="status-badge status-menunggu mt-2"
-                                >
+                                            Pengajuan Menunggu
 
-                                    <i class="bi bi-clock"></i>
+                                        </span>
 
-                                    Pengajuan Berhenti Menunggu
-
-                                </span>
+                                    </div>
 
 
-                            @elseif(
-                                $pengajuanBerhenti->status === 'disetujui'
-                            )
+                                @elseif(
+                                    $pengajuanBerhenti &&
+                                    $pengajuanBerhenti->status === 'disetujui'
+                                )
 
-                                <span
-                                    class="status-badge status-disetujui mt-2"
-                                >
+                                    <div class="status-grid-item">
 
-                                    <i class="bi bi-check-circle"></i>
+                                        <span class="status-badge status-disetujui">
 
-                                    Pengajuan Berhenti Disetujui
+                                            <i class="bi bi-check-circle"></i>
 
-                                </span>
+                                            Pengajuan Disetujui
 
-                            @endif
+                                        </span>
+
+                                    </div>
+
+
+                                @elseif(
+                                    $pengajuanBerhenti &&
+                                    $pengajuanBerhenti->status === 'ditolak'
+                                )
+
+                                    <div class="status-grid-item">
+
+                                        <span class="status-badge status-ditolak">
+
+                                            <i class="bi bi-x-circle-fill"></i>
+
+                                            Pengajuan Ditolak
+
+                                        </span>
+
+                                    </div>
+
+
+                                @else
+
+                                    <div class="status-grid-item">
+
+                                        <span class="status-badge status-lain">
+
+                                            <i class="bi bi-dash-circle"></i>
+
+                                            Belum Ada Pengajuan
+
+                                        </span>
+
+                                    </div>
+
+                                @endif
 
 
 
-                        {{-- DITOLAK PEMESANAN --}}
-                        @elseif(
-                            $status === 'ditolak' ||
-                            $status === 'rejected'
+                                {{-- =================================================
+                                     CATATAN ADMIN
+                                ================================================== --}}
+
+                                @if(
+                                    $pengajuanBerhenti &&
+                                    $pengajuanBerhenti->status === 'ditolak' &&
+                                    $pengajuanBerhenti->catatan_admin
+                                )
+
+                                    <div class="rejected-note">
+
+                                        <div class="rejected-note-title">
+
+                                            <i class="bi bi-chat-left-text me-1"></i>
+
+                                            Catatan Admin
+
+                                        </div>
+
+
+                                        <div class="rejected-note-text">
+
+                                            {{ $pengajuanBerhenti->catatan_admin }}
+
+                                        </div>
+
+                                    </div>
+
+                                @endif
+
+                            </div>
+
+                        @endif
+
+
+
+                        {{-- =================================================
+                             DETAIL BERHENTI
+                        ================================================== --}}
+
+                        @if(
+                            $status === 'berhenti' &&
+                            $pengajuanBerhenti
                         )
 
-                            <span class="status-badge status-ditolak">
+                            <small class="text-muted mt-2 text-end">
 
-                                <i class="bi bi-x-circle-fill"></i>
+                                Berhenti:
 
-                                Ditolak
+                                {{ $pengajuanBerhenti->tanggal_berhenti
+                                    ? $pengajuanBerhenti
+                                        ->tanggal_berhenti
+                                        ->format('d M Y')
+                                    : '-'
+                                }}
 
-                            </span>
-
-
-
-                        {{-- BERHENTI --}}
-                        @elseif(
-                            $status === 'berhenti'
-                        )
-
-                            <span
-                                class="status-badge status-berhenti"
-                            >
-
-                                <i class="bi bi-box-arrow-right"></i>
-
-                                Sudah Berhenti Ngekos
-
-                            </span>
-
-
-                            @if($pengajuanBerhenti)
-
-                                <small class="text-muted mt-2 text-end">
-
-                                    Berhenti:
-
-                                    {{ $pengajuanBerhenti->tanggal_berhenti
-                                        ? $pengajuanBerhenti
-                                            ->tanggal_berhenti
-                                            ->format('d M Y')
-                                        : '-'
-                                    }}
-
-                                </small>
-
-                            @endif
-
-
-                        {{-- STATUS LAIN --}}
-                        @else
-
-                            <span class="status-badge status-lain">
-
-                                <i class="bi bi-info-circle-fill"></i>
-
-                                {{ ucfirst(
-                                    $pemesanan->status
-                                    ?? 'Menunggu'
-                                ) }}
-
-                            </span>
+                            </small>
 
                         @endif
 

@@ -1,330 +1,346 @@
 <div class="sidebar">
 
-{{-- LOGO --}}
+    {{-- LOGO --}}
+    <div class="sidebar-logo">
 
-<div class="sidebar-logo">
+        <div class="logo-circle">
+            KK
+        </div>
 
-<div class="logo-circle">
-    KK
-</div>
+        <div>
+            <h4>KosKu</h4>
+            <small>Admin Panel</small>
+        </div>
 
-<div>
-    <h4>KosKu</h4>
-    <small>Admin Panel</small>
-</div>
-
-</div>
-
-{{-- MENU --}}
-
-<div class="sidebar-menu">
-
-<p class="menu-title">
-    MENU UTAMA
-</p>
+    </div>
 
 
-{{-- =====================================================
-     DASHBOARD
-====================================================== --}}
+    {{-- MENU --}}
+    <div class="sidebar-menu">
 
-<a
-    href="{{ route('admin.dashboard') }}"
-    class="menu-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
->
-
-    <i class="bi bi-grid-1x2-fill"></i>
-
-    <span>
-        Dashboard
-    </span>
-
-</a>
+        <p class="menu-title">
+            MENU UTAMA
+        </p>
 
 
-{{-- =====================================================
-     DATA KOS DROPDOWN
-====================================================== --}}
+        {{-- =====================================================
+             DASHBOARD
+        ====================================================== --}}
 
-<div class="menu-dropdown">
+        <a
+            href="{{ route('admin.dashboard') }}"
+            class="menu-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
+        >
 
-    <button
-        type="button"
-        class="menu-item menu-dropdown-toggle
-        {{ request()->routeIs('admin.data*') || request()->routeIs('admin.kamar*') ? 'active open' : '' }}"
-        onclick="toggleDropdown(this)"
-    >
+            <i class="bi bi-grid-1x2-fill"></i>
 
-        <i class="bi bi-house-door-fill"></i>
+            <span>
+                Dashboard
+            </span>
 
-        <span>
-            Data Kos
-        </span>
+        </a>
 
-        <i class="bi bi-chevron-down dropdown-arrow"></i>
 
-    </button>
+        {{-- =====================================================
+             DATA KOS DROPDOWN
+        ====================================================== --}}
 
+        <div class="menu-dropdown">
+
+            <button
+                type="button"
+                class="menu-item menu-dropdown-toggle
+                {{ request()->routeIs('admin.data*') || request()->routeIs('admin.kamar*') ? 'active open' : '' }}"
+                onclick="toggleDropdown(this)"
+            >
+
+                <i class="bi bi-house-door-fill"></i>
+
+                <span>
+                    Data Kos
+                </span>
+
+                <i class="bi bi-chevron-down dropdown-arrow"></i>
+
+            </button>
+
+
+            <div
+                class="menu-submenu
+                {{ request()->routeIs('admin.data*') || request()->routeIs('admin.kamar*') ? 'show' : '' }}"
+            >
+
+                {{-- DATA KOS --}}
+                <a
+                    href="{{ route('admin.data') }}"
+                    class="menu-subitem
+                    {{ request()->routeIs('admin.data*') ? 'active' : '' }}"
+                >
+
+                    <i class="bi bi-house"></i>
+
+                    <span>
+                        Data Kos
+                    </span>
+
+                </a>
+
+
+                {{-- DATA KAMAR --}}
+                <a
+                    href="{{ route('admin.kamar') }}"
+                    class="menu-subitem
+                    {{ request()->routeIs('admin.kamar*') ? 'active' : '' }}"
+                >
+
+                    <i class="bi bi-door-open"></i>
+
+                    <span>
+                        Data Kamar
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {{-- =====================================================
+             PENGHUNI DROPDOWN
+        ====================================================== --}}
+
+        <div class="menu-dropdown">
+
+            <button
+                type="button"
+                class="menu-item menu-dropdown-toggle
+                {{ request()->routeIs('admin.penghuni*') || request()->routeIs('admin.pengajuan-berhenti*') ? 'active open' : '' }}"
+                onclick="toggleDropdown(this)"
+            >
+
+                <i class="bi bi-people-fill"></i>
+
+                <span>
+                    Penghuni
+                </span>
+
+                <i class="bi bi-chevron-down dropdown-arrow"></i>
+
+            </button>
+
+
+            <div
+                class="menu-submenu
+                {{ request()->routeIs('admin.penghuni*') || request()->routeIs('admin.pengajuan-berhenti*') ? 'show' : '' }}"
+            >
+
+                {{-- PENGHUNI --}}
+                <a
+                    href="{{ route('admin.penghuni') }}"
+                    class="menu-subitem
+                    {{ request()->routeIs('admin.penghuni*') ? 'active' : '' }}"
+                >
+
+                    <i class="bi bi-person"></i>
+
+                    <span>
+                        Penghuni
+                    </span>
+
+                </a>
+
+
+                {{-- BERHENTI NGEKOS --}}
+                <a
+                    href="{{ route('admin.pengajuan-berhenti') }}"
+                    class="menu-subitem
+                    {{ request()->routeIs('admin.pengajuan-berhenti*') ? 'active' : '' }}"
+                >
+
+                    <i class="bi bi-box-arrow-right"></i>
+
+                    <span>
+                        Berhenti Ngekos
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {{-- =====================================================
+             PEMESANAN DROPDOWN
+        ====================================================== --}}
+
+        <div class="menu-dropdown">
+
+            <button
+                type="button"
+                class="menu-item menu-dropdown-toggle
+                {{ request()->routeIs('admin.pemesanan*') || request()->routeIs('admin.pembayaran*') ? 'active open' : '' }}"
+                onclick="toggleDropdown(this)"
+            >
+
+                <i class="bi bi-calendar-check-fill"></i>
+
+                <span>
+                    Pemesanan
+                </span>
+
+                <i class="bi bi-chevron-down dropdown-arrow"></i>
+
+            </button>
+
+
+            <div
+                class="menu-submenu
+                {{ request()->routeIs('admin.pemesanan*') || request()->routeIs('admin.pembayaran*') ? 'show' : '' }}"
+            >
+
+                {{-- PEMESANAN --}}
+                <a
+                    href="{{ route('admin.pemesanan') }}"
+                    class="menu-subitem
+                    {{ request()->routeIs('admin.pemesanan*') ? 'active' : '' }}"
+                >
+
+                    <i class="bi bi-calendar-check"></i>
+
+                    <span>
+                        Pemesanan
+                    </span>
+
+                </a>
+
+
+                {{-- PEMBAYARAN --}}
+                <a
+                    href="{{ route('admin.pembayaran') }}"
+                    class="menu-subitem
+                    {{ request()->routeIs('admin.pembayaran*') ? 'active' : '' }}"
+                >
+
+                    <i class="bi bi-wallet2"></i>
+
+                    <span>
+                        Pembayaran
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {{-- =====================================================
+             FEEDBACK
+        ====================================================== --}}
+
+        <a
+            href="{{ route('admin.feedback.index') }}"
+            class="menu-item {{ request()->routeIs('admin.feedback.*') ? 'active' : '' }}"
+        >
+
+            <i class="bi bi-chat-left-text-fill"></i>
+
+            <span>
+                Feedback
+            </span>
+
+        </a>
+
+
+        {{-- =====================================================
+             LAINNYA
+        ====================================================== --}}
+
+        <p class="menu-title mt-4">
+            LAINNYA
+        </p>
+
+
+        {{-- PENGATURAN --}}
+        <a
+            href="{{ route('admin.pengaturan') }}"
+            class="menu-item {{ request()->routeIs('admin.pengaturan*') ? 'active' : '' }}"
+        >
+
+            <i class="bi bi-gear-fill"></i>
+
+            <span>
+                Pengaturan
+            </span>
+
+        </a>
+
+    </div>
+
+
+    {{-- =====================================================
+         ADMIN BAWAH
+    ====================================================== --}}
 
     <div
-        class="menu-submenu
-        {{ request()->routeIs('admin.data*') || request()->routeIs('admin.kamar*') ? 'show' : '' }}"
+        class="sidebar-bottom"
+        style="
+            margin-top: auto;
+            flex-shrink: 0;
+        "
     >
 
-        {{-- DATA KOS --}}
-        <a
-            href="{{ route('admin.data') }}"
-            class="menu-subitem
-            {{ request()->routeIs('admin.data*') ? 'active' : '' }}"
+        {{-- PROFILE ADMIN --}}
+        <div class="admin-profile">
+
+            <div class="admin-avatar">
+
+                {{ strtoupper(
+                    substr(Auth::user()->name, 0, 1)
+                ) }}
+
+            </div>
+
+            <div class="admin-info">
+
+                <strong>
+                    {{ Auth::user()->name }}
+                </strong>
+
+                <small>
+                    Administrator
+                </small>
+
+            </div>
+
+        </div>
+
+
+        {{-- LOGOUT --}}
+        <button
+            type="button"
+            class="logout-btn"
+            data-bs-toggle="modal"
+            data-bs-target="#adminLogoutModal"
         >
 
-            <i class="bi bi-house"></i>
+            <i class="bi bi-box-arrow-left"></i>
 
             <span>
-                Data Kos
+                Logout
             </span>
 
-        </a>
-
-
-        {{-- DATA KAMAR --}}
-        <a
-            href="{{ route('admin.kamar') }}"
-            class="menu-subitem
-            {{ request()->routeIs('admin.kamar*') ? 'active' : '' }}"
-        >
-
-            <i class="bi bi-door-open"></i>
-
-            <span>
-                Data Kamar
-            </span>
-
-        </a>
+        </button>
 
     </div>
-
-</div>
-
-
-{{-- =====================================================
-     PENGHUNI DROPDOWN
-====================================================== --}}
-
-<div class="menu-dropdown">
-
-    <button
-        type="button"
-        class="menu-item menu-dropdown-toggle
-        {{ request()->routeIs('admin.penghuni*') || request()->routeIs('admin.pengajuan-berhenti*') ? 'active open' : '' }}"
-        onclick="toggleDropdown(this)"
-    >
-
-        <i class="bi bi-people-fill"></i>
-
-        <span>
-            Penghuni
-        </span>
-
-        <i class="bi bi-chevron-down dropdown-arrow"></i>
-
-    </button>
-
-
-    <div
-        class="menu-submenu
-        {{ request()->routeIs('admin.penghuni*') || request()->routeIs('admin.pengajuan-berhenti*') ? 'show' : '' }}"
-    >
-
-        {{-- PENGHUNI --}}
-        <a
-            href="{{ route('admin.penghuni') }}"
-            class="menu-subitem
-            {{ request()->routeIs('admin.penghuni*') ? 'active' : '' }}"
-        >
-
-            <i class="bi bi-person"></i>
-
-            <span>
-                Penghuni
-            </span>
-
-        </a>
-
-
-        {{-- BERHENTI NGEKOS --}}
-        <a
-            href="{{ route('admin.pengajuan-berhenti') }}"
-            class="menu-subitem
-            {{ request()->routeIs('admin.pengajuan-berhenti*') ? 'active' : '' }}"
-        >
-
-            <i class="bi bi-box-arrow-right"></i>
-
-            <span>
-                Berhenti Ngekos
-            </span>
-
-        </a>
-
-    </div>
-
-</div>
-
-
-{{-- =====================================================
-     PEMESANAN DROPDOWN
-====================================================== --}}
-
-<div class="menu-dropdown">
-
-    <button
-        type="button"
-        class="menu-item menu-dropdown-toggle
-        {{ request()->routeIs('admin.pemesanan*') || request()->routeIs('admin.pembayaran*') ? 'active open' : '' }}"
-        onclick="toggleDropdown(this)"
-    >
-
-        <i class="bi bi-calendar-check-fill"></i>
-
-        <span>
-            Pemesanan
-        </span>
-
-        <i class="bi bi-chevron-down dropdown-arrow"></i>
-
-    </button>
-
-
-    <div
-        class="menu-submenu
-        {{ request()->routeIs('admin.pemesanan*') || request()->routeIs('admin.pembayaran*') ? 'show' : '' }}"
-    >
-
-        {{-- PEMESANAN --}}
-        <a
-            href="{{ route('admin.pemesanan') }}"
-            class="menu-subitem
-            {{ request()->routeIs('admin.pemesanan*') ? 'active' : '' }}"
-        >
-
-            <i class="bi bi-calendar-check"></i>
-
-            <span>
-                Pemesanan
-            </span>
-
-        </a>
-
-
-        {{-- PEMBAYARAN --}}
-        <a
-            href="{{ route('admin.pembayaran') }}"
-            class="menu-subitem
-            {{ request()->routeIs('admin.pembayaran*') ? 'active' : '' }}"
-        >
-
-            <i class="bi bi-wallet2"></i>
-
-            <span>
-                Pembayaran
-            </span>
-
-        </a>
-
-    </div>
-
-</div>
-
-
-{{-- =====================================================
-     LAINNYA
-====================================================== --}}
-
-<p class="menu-title mt-4">
-    LAINNYA
-</p>
-
-
-{{-- PENGATURAN --}}
-<a
-    href="{{ route('admin.pengaturan') }}"
-    class="menu-item {{ request()->routeIs('admin.pengaturan*') ? 'active' : '' }}"
->
-
-    <i class="bi bi-gear-fill"></i>
-
-    <span>
-        Pengaturan
-    </span>
-
-</a>
-
-</div>
-
-
-{{-- =====================================================
-     ADMIN BAWAH
-====================================================== --}}
-
-<div
-    class="sidebar-bottom"
-    style="
-        margin-top: auto;
-        flex-shrink: 0;
-    "
->
-
-{{-- PROFILE ADMIN --}}
-<div class="admin-profile">
-
-    <div class="admin-avatar">
-
-        {{ strtoupper(
-            substr(Auth::user()->name, 0, 1)
-        ) }}
-
-    </div>
-
-
-    <div class="admin-info">
-
-        <strong>
-            {{ Auth::user()->name }}
-        </strong>
-
-        <small>
-            Administrator
-        </small>
-
-    </div>
-
-</div>
-
-
-{{-- LOGOUT --}}
-<button
-    type="button"
-    class="logout-btn"
-    data-bs-toggle="modal"
-    data-bs-target="#adminLogoutModal"
->
-
-    <i class="bi bi-box-arrow-left"></i>
-
-    <span>
-        Logout
-    </span>
-
-</button>
-
-</div>
 
 </div>
 
 
 {{-- =========================================================
-MODAL KONFIRMASI LOGOUT
+     MODAL KONFIRMASI LOGOUT
 ========================================================= --}}
 
 <div
@@ -335,85 +351,78 @@ MODAL KONFIRMASI LOGOUT
     aria-hidden="true"
 >
 
-<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered">
 
-<div class="modal-content">
+        <div class="modal-content">
 
-    <div class="modal-body text-center">
+            <div class="modal-body text-center">
 
+                {{-- ICON --}}
+                <div class="admin-logout-icon">
 
-        {{-- ICON --}}
+                    <i class="bi bi-box-arrow-right"></i>
 
-        <div class="admin-logout-icon">
-
-            <i class="bi bi-box-arrow-right"></i>
-
-        </div>
+                </div>
 
 
-        {{-- TITLE --}}
-
-        <h4
-            class="admin-logout-title"
-            id="adminLogoutModalLabel"
-        >
-
-            Keluar dari Admin Panel?
-
-        </h4>
+                {{-- TITLE --}}
+                <h4
+                    class="admin-logout-title"
+                    id="adminLogoutModalLabel"
+                >
+                    Keluar dari Admin Panel?
+                </h4>
 
 
-        {{-- TEXT --}}
+                {{-- TEXT --}}
+                <p class="admin-logout-text">
 
-        <p class="admin-logout-text">
+                    Apakah kamu yakin ingin keluar
+                    dari akun administrator?
 
-            Apakah kamu yakin ingin keluar
-            dari akun administrator?
-
-        </p>
-
-
-        {{-- BUTTON --}}
-
-        <div
-            class="d-flex justify-content-center gap-2 mt-4"
-        >
-
-            {{-- BATAL --}}
-
-            <button
-                type="button"
-                class="admin-logout-cancel"
-                data-bs-dismiss="modal"
-            >
-
-                Batal
-
-            </button>
+                </p>
 
 
-            {{-- YA, LOGOUT --}}
-
-            <form
-                action="{{ route('logout') }}"
-                method="POST"
-                class="m-0"
-            >
-
-                @csrf
-
-                <button
-                    type="submit"
-                    class="admin-logout-confirm"
+                {{-- BUTTON --}}
+                <div
+                    class="d-flex justify-content-center gap-2 mt-4"
                 >
 
-                    <i class="bi bi-box-arrow-right me-1"></i>
+                    {{-- BATAL --}}
+                    <button
+                        type="button"
+                        class="admin-logout-cancel"
+                        data-bs-dismiss="modal"
+                    >
+                        Batal
+                    </button>
 
-                    Ya, Logout
 
-                </button>
+                    {{-- YA, LOGOUT --}}
+                    <form
+                        action="{{ route('logout') }}"
+                        method="POST"
+                        class="m-0"
+                    >
 
-            </form>
+                        @csrf
+
+                        <button
+                            type="submit"
+                            class="admin-logout-confirm"
+                        >
+
+                            <i class="bi bi-box-arrow-right me-1"></i>
+
+                            Ya, Logout
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
 
         </div>
 
@@ -421,13 +430,9 @@ MODAL KONFIRMASI LOGOUT
 
 </div>
 
-</div>
-
-</div>
-
 
 {{-- =========================================================
-DROPDOWN JAVASCRIPT
+     DROPDOWN JAVASCRIPT
 ========================================================= --}}
 
 <script>
@@ -485,7 +490,7 @@ function toggleDropdown(button) {
 
 
 {{-- =========================================================
-CSS DROPDOWN + ACTIVE + LOGOUT MODAL
+     CSS DROPDOWN + ACTIVE + LOGOUT MODAL
 ========================================================= --}}
 
 <style>
@@ -904,19 +909,32 @@ CSS DROPDOWN + ACTIVE + LOGOUT MODAL
 ===================================================== */
 
 .admin-logout-confirm {
+
     background: #0f172a;
+
     color: white;
+
     border: 1px solid #0f172a;
+
     border-radius: 9px;
+
     padding: 10px 20px;
+
     font-weight: 600;
+
     transition: 0.2s;
+
 }
 
+
 .admin-logout-confirm:hover {
+
     background: #dc3545;
+
     border-color: #dc3545;
+
     color: white;
+
 }
 
 
