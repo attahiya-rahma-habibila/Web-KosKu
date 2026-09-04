@@ -79,8 +79,6 @@
         background: #f1f5f9;
     }
 
-    /* MENU ACTIVE */
-
     .nav-link.active {
         color: #0f172a !important;
         background: #e2e8f0;
@@ -98,8 +96,6 @@
         text-decoration: none;
     }
 
-    /* LOGIN JADI BIRU SAAT DIKLIK / HOVER */
-
     .btn-login:hover,
     .btn-login:focus,
     .btn-login:active {
@@ -108,15 +104,11 @@
         color: white !important;
     }
 
-    /* LOGOUT NORMAL */
-
     .btn-navbar-logout {
         background: white;
         color: #0f172a;
         border: 1px solid #0f172a;
     }
-
-    /* LOGOUT JADI MERAH SAAT DIKLIK / HOVER */
 
     .btn-navbar-logout:hover,
     .btn-navbar-logout:focus,
@@ -242,7 +234,7 @@
 
 
     /* =====================================================
-       HERO HOUSE
+       HERO HOUSE / SLIDER
     ===================================================== */
 
     .hero-house {
@@ -267,12 +259,119 @@
 
         box-shadow:
             0 30px 70px rgba(0,0,0,0.3);
+
+        overflow: hidden;
+        position: relative;
     }
 
     .hero-house i {
         font-size: 130px;
         color: white;
         opacity: 0.9;
+    }
+
+    .hero-kos-slider {
+        width: 100%;
+        height: 100%;
+    }
+
+    .hero-kos-slider .carousel-inner,
+    .hero-kos-slider .carousel-item {
+        width: 100%;
+        height: 100%;
+    }
+
+    .hero-kos-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .hero-kos-placeholder {
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background:
+            linear-gradient(
+                145deg,
+                #1e293b,
+                #0f172a
+            );
+    }
+
+    .hero-kos-placeholder i {
+        font-size: 110px;
+        color: white;
+        opacity: 0.9;
+    }
+
+    .hero-kos-caption {
+        position: absolute;
+
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        padding: 55px 20px 20px;
+
+        background:
+            linear-gradient(
+                to top,
+                rgba(2,6,23,0.9),
+                transparent
+            );
+
+        color: white;
+
+        z-index: 2;
+    }
+
+    .hero-kos-caption small {
+        display: block;
+        font-size: 12px;
+        opacity: 0.8;
+        margin-bottom: 3px;
+    }
+
+    .hero-kos-caption span {
+        display: block;
+
+        font-size: 17px;
+        font-weight: 700;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .hero-kos-slider .carousel-indicators {
+        z-index: 3;
+        margin-bottom: 15px;
+    }
+
+    .hero-kos-slider .carousel-indicators button {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin: 0 4px;
+    }
+
+    .hero-kos-slider .carousel-control-prev,
+    .hero-kos-slider .carousel-control-next {
+        width: 15%;
+        z-index: 3;
+    }
+
+    .hero-kos-slider .carousel-control-prev-icon,
+    .hero-kos-slider .carousel-control-next-icon {
+        background-color: rgba(15,23,42,0.65);
+        border-radius: 50%;
+        padding: 17px;
+        background-size: 45%;
     }
 
 
@@ -374,11 +473,6 @@
         box-shadow:
             0 18px 40px rgba(15,23,42,0.14);
     }
-
-
-    /* =====================================================
-       FOTO KOS
-    ===================================================== */
 
     .kos-image {
         height: 200px;
@@ -970,7 +1064,7 @@ POPUP PEMESANAN DISETUJUI
 
 
                 <h3 class="fw-bold mb-3">
-                    Pemesanan Disetujui! 
+                    Pemesanan Disetujui!
                 </h3>
 
 
@@ -1327,7 +1421,127 @@ HERO
 
                 <div class="hero-house">
 
-                    <i class="bi bi-house-heart-fill"></i>
+                    @if($kos->count() > 0)
+
+                        <div
+                            id="heroKosSlider"
+                            class="carousel slide hero-kos-slider"
+                            data-bs-ride="false"
+                            data-bs-pause="false"
+                        >
+
+                            <div class="carousel-indicators">
+
+                                @foreach($kos->take(3) as $index => $item)
+
+                                    <button
+                                        type="button"
+                                        data-bs-target="#heroKosSlider"
+                                        data-bs-slide-to="{{ $index }}"
+                                        class="{{ $index === 0 ? 'active' : '' }}"
+                                        aria-current="{{ $index === 0 ? 'true' : 'false' }}"
+                                        aria-label="Foto {{ $index + 1 }}"
+                                    ></button>
+
+                                @endforeach
+
+                            </div>
+
+
+                            <div class="carousel-inner">
+
+                                @foreach($kos->take(3) as $index => $item)
+
+                                    <div
+                                        class="carousel-item {{ $index === 0 ? 'active' : '' }}"
+                                    >
+
+                                        @if($item->foto)
+
+                                            <img
+                                                src="{{ asset('kos/' . $item->foto) }}"
+                                                alt="{{ $item->nama_kos }}"
+                                                class="hero-kos-image"
+                                            >
+
+                                        @else
+
+                                            <div class="hero-kos-placeholder">
+
+                                                <i class="bi bi-house-heart-fill"></i>
+
+                                            </div>
+
+                                        @endif
+
+
+                                        <div class="hero-kos-caption">
+
+                                            <small>
+                                                Top {{ $index + 1 }} Kos
+                                            </small>
+
+                                            <span>
+                                                {{ $item->nama_kos }}
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                @endforeach
+
+                            </div>
+
+
+                            @if($kos->take(3)->count() > 1)
+
+                                <button
+                                    class="carousel-control-prev"
+                                    type="button"
+                                    data-bs-target="#heroKosSlider"
+                                    data-bs-slide="prev"
+                                >
+
+                                    <span
+                                        class="carousel-control-prev-icon"
+                                        aria-hidden="true"
+                                    ></span>
+
+                                    <span class="visually-hidden">
+                                        Previous
+                                    </span>
+
+                                </button>
+
+
+                                <button
+                                    class="carousel-control-next"
+                                    type="button"
+                                    data-bs-target="#heroKosSlider"
+                                    data-bs-slide="next"
+                                >
+
+                                    <span
+                                        class="carousel-control-next-icon"
+                                        aria-hidden="true"
+                                    ></span>
+
+                                    <span class="visually-hidden">
+                                        Next
+                                    </span>
+
+                                </button>
+
+                            @endif
+
+                        </div>
+
+                    @else
+
+                        <i class="bi bi-house-heart-fill"></i>
+
+                    @endif
 
                 </div>
 
@@ -1960,6 +2174,64 @@ FOOTER
 
 
 {{-- =========================================================
+SLIDER OTOMATIS SETIAP 5 DETIK
+========================================================= --}}
+
+<script>
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        const sliderElement =
+            document.getElementById(
+                'heroKosSlider'
+            );
+
+
+        if (!sliderElement) {
+            return;
+        }
+
+
+        const jumlahSlide =
+            sliderElement.querySelectorAll(
+                '.carousel-item'
+            ).length;
+
+
+        if (jumlahSlide <= 1) {
+            return;
+        }
+
+
+        const slider =
+            new bootstrap.Carousel(
+                sliderElement,
+                {
+                    interval: false,
+                    pause: false,
+                    wrap: true
+                }
+            );
+
+
+        setInterval(
+            function () {
+
+                slider.next();
+
+            },
+            5000
+        );
+
+    }
+);
+
+</script>
+
+
+{{-- =========================================================
 SEARCH SCRIPT
 ========================================================= --}}
 
@@ -2179,12 +2451,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | KLIK MENU
-    |--------------------------------------------------------------------------
-    */
-
     navLinks.forEach(function (link) {
 
         link.addEventListener(
@@ -2202,12 +2468,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | ACTIVE OTOMATIS SAAT SCROLL
-    |--------------------------------------------------------------------------
-    */
 
     window.addEventListener(
         'scroll',
