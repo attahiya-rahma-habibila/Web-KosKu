@@ -51,34 +51,75 @@
             z-index: 1000;
         }
 
+        .navbar-kosku .container-fluid {
+            position: relative;
+            min-height: 40px;
+        }
+
         .brand {
             font-size: 22px;
             font-weight: 800;
             color: #032456;
             text-decoration: none;
+            white-space: nowrap;
         }
 
         .brand:hover {
             color: #011b42;
         }
 
+
+        /* =====================================================
+           MENU NAVBAR DI TENGAH
+        ====================================================== */
+
+        .navbar-center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+            white-space: nowrap;
+        }
+
         .nav-link-kosku {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
             color: #6c757d;
             text-decoration: none;
+
             font-size: 14px;
             font-weight: 500;
-            margin-left: 25px;
-            transition: 0.2s;
+
+            padding: 9px 13px;
+            border-radius: 8px;
+
+            transition: all 0.2s ease;
+            white-space: nowrap;
         }
 
         .nav-link-kosku:hover {
             color: #011b42;
+            background: #f5f7fb;
         }
 
         .nav-link-kosku.active {
             color: #04285e;
+            background: #eef4ff;
             font-weight: 700;
         }
+
+
+        /* =====================================================
+           USER
+        ====================================================== */
 
         .user-menu {
             display: flex;
@@ -89,18 +130,46 @@
         .user-icon {
             width: 38px;
             height: 38px;
+
             border-radius: 50%;
+
             background: #eef4ff;
             color: #021839;
+
             display: flex;
             align-items: center;
             justify-content: center;
+
             font-size: 18px;
+            flex-shrink: 0;
         }
 
         .user-name {
             font-weight: 600;
             font-size: 14px;
+            color: #212529;
+            white-space: nowrap;
+        }
+
+
+        /* =====================================================
+           TOGGLER
+        ====================================================== */
+
+        .navbar-toggler {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 7px 10px;
+            color: #032456;
+            box-shadow: none !important;
+        }
+
+        .navbar-toggler:hover {
+            background: #f5f7fb;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 0.15rem rgba(3, 36, 86, 0.10) !important;
         }
 
 
@@ -646,9 +715,37 @@
                 padding: 14px 18px;
             }
 
+            .navbar-kosku .container-fluid {
+                min-height: auto;
+            }
+
+            .navbar-center {
+                position: static;
+                transform: none;
+
+                width: 100%;
+
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                justify-content: flex-start;
+
+                gap: 4px;
+
+                margin-top: 12px;
+            }
+
             .nav-link-kosku {
-                margin-left: 0;
-                margin-right: 15px;
+                width: 100%;
+                justify-content: flex-start;
+                margin: 0;
+            }
+
+            .user-menu {
+                width: 100%;
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px solid #e9ecef;
             }
 
             .main-container {
@@ -687,12 +784,12 @@
 
         @media (max-width: 576px) {
 
-            .user-name {
-                display: none;
-            }
-
             .brand {
                 font-size: 20px;
+            }
+
+            .user-name {
+                display: inline;
             }
 
             .card-header-custom,
@@ -706,11 +803,6 @@
 
             .nav-link-kosku {
                 font-size: 13px;
-                margin-right: 10px;
-            }
-
-            .nav-link-kosku i {
-                display: none;
             }
 
             .payment-info {
@@ -731,29 +823,53 @@
      NAVBAR
 ========================================================= --}}
 
-<nav class="navbar-kosku">
+<nav class="navbar navbar-expand-lg navbar-kosku">
 
     <div class="container-fluid">
 
-        <div class="d-flex align-items-center justify-content-between">
+        {{-- BRAND --}}
 
-            {{-- BRAND --}}
+        <a
+            href="{{ route('user.landing') }}"
+            class="brand"
+        >
 
-            <a
-                href="{{ route('user.dashboard') }}"
-                class="brand"
-            >
+            <i class="bi bi-house-heart-fill me-1"></i>
 
-                <i class="bi bi-house-heart-fill me-1"></i>
+            KosKu
 
-                KosKu
-
-            </a>
+        </a>
 
 
-            {{-- NAVIGATION --}}
+        {{-- TOGGLE MOBILE --}}
 
-            <div class="d-flex align-items-center">
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarKosKu"
+            aria-controls="navbarKosKu"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+
+            <i class="bi bi-list"></i>
+
+        </button>
+
+
+        <div
+            class="collapse navbar-collapse"
+            id="navbarKosKu"
+        >
+
+            {{-- =================================================
+                 MENU TENGAH
+            ================================================== --}}
+
+            <div class="navbar-center">
+
+                {{-- BERANDA --}}
 
                 <a
                     href="{{ route('user.landing') }}"
@@ -762,10 +878,12 @@
 
                     <i class="bi bi-house me-1"></i>
 
-                    Beranda
+                    Home
 
                 </a>
 
+
+                {{-- PESANAN --}}
 
                 <a
                     href="{{ url('/status-pesanan') }}"
@@ -779,6 +897,8 @@
                 </a>
 
 
+                {{-- PEMBAYARAN --}}
+
                 <a
                     href="{{ route('user.pembayaran') }}"
                     class="nav-link-kosku active"
@@ -790,24 +910,26 @@
 
                 </a>
 
+            </div>
 
-                {{-- USER --}}
 
-                <div class="user-menu ms-4">
+            {{-- =================================================
+                 USER KANAN
+            ================================================== --}}
 
-                    <div class="user-icon">
+            <div class="user-menu ms-auto">
 
-                        <i class="bi bi-person-fill"></i>
+                <div class="user-icon">
 
-                    </div>
-
-                    <span class="user-name">
-
-                        {{ auth()->user()->name ?? 'User' }}
-
-                    </span>
+                    <i class="bi bi-person-fill"></i>
 
                 </div>
+
+                <span class="user-name">
+
+                    {{ auth()->user()->name ?? 'User' }}
+
+                </span>
 
             </div>
 
@@ -1110,9 +1232,7 @@
 
                                     <i class="bi bi-house-door"></i>
 
-                                    <span>
-                                        
-                                    </span>
+                                    <span></span>
 
                                 </div>
 

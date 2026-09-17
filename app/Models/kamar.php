@@ -4,13 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Kos;
+use App\Models\Pemesanan;
+use App\Models\Penghuni;
 
 class Kamar extends Model
 {
     use HasFactory;
 
     protected $table = 'kamar';
-
 
     protected $fillable = [
         'kos_id',
@@ -20,7 +22,6 @@ class Kamar extends Model
         'luas',
         'status',
     ];
-
 
     /*
     |--------------------------------------------------------------------------
@@ -36,7 +37,6 @@ class Kamar extends Model
         );
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | RELASI PEMESANAN
@@ -50,7 +50,6 @@ class Kamar extends Model
             'kamar_id'
         );
     }
-
 
     /*
     |--------------------------------------------------------------------------

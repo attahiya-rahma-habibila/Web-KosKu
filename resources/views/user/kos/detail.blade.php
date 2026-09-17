@@ -56,35 +56,88 @@
         ===================================================== */
 
         .navbar-kosku {
-            height: 70px;
-            background: #ffffff;
-            border-bottom: 1px solid #e8ebef;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 999;
         }
 
 
         .brand {
             font-size: 25px;
             font-weight: 800;
+            color: #0f172a;
             text-decoration: none;
-            color: #111827;
         }
 
 
         .brand span {
-            color: #31557d;
+            color: #1e3a5f;
         }
 
 
-        .back-btn {
-            text-decoration: none;
-            color: #64748b;
+        .nav-link {
+            color: #475569;
+            font-weight: 500;
+            margin: 0 8px;
+            transition: 0.2s;
+        }
+
+
+        .nav-link:hover {
+            color: #0f172a;
+        }
+
+
+        .btn-login {
+            border: 1px solid #0f172a;
+            color: #0f172a;
+            border-radius: 9px;
+            padding: 9px 20px;
             font-weight: 600;
-            transition: .2s;
+            transition: 0.2s;
+            text-decoration: none;
+            background: transparent;
         }
 
 
-        .back-btn:hover {
-            color: #111827;
+        .btn-login:hover {
+            background: #0f172a;
+            color: white;
+        }
+
+
+        .navbar-toggler {
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            padding: 7px 10px;
+        }
+
+
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 3px rgba(49, 85, 125, .10);
+        }
+
+
+        @media (max-width: 576px) {
+
+            .navbar-kosku .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+
+            .brand {
+                font-size: 22px;
+            }
+
+
+            .nav-link {
+                margin: 4px 0;
+            }
+
         }
 
 
@@ -359,6 +412,7 @@
             background: #f7f8fa;
             border-radius: 14px;
             padding: 17px;
+            min-width: 0;
         }
 
 
@@ -384,19 +438,44 @@
 
 
         /* =====================================================
-           DESCRIPTION
+           NOMOR HP
+        ===================================================== */
+
+        .info-phone {
+            font-size: 13px;
+            white-space: nowrap;
+            letter-spacing: -0.2px;
+        }
+
+
+        /* =====================================================
+           TENTANG KOS
         ===================================================== */
 
         .description {
-            margin-top: 25px;
-            padding-top: 10px;
-            border-top: 1px solid #edf0f4;
+            margin-top: 22px;
+            padding: 18px 20px 16px;
+            background: #f8fafc;
+            border: 1px solid #e5eaf0;
+            border-radius: 16px;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
         }
 
 
         .description h5 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-weight: 800;
-            margin: 0 0 2px;
+            font-size: 17px;
+            color: #172033;
+            margin: 0 0 10px;
+        }
+
+
+        .description h5 i {
+            color: #31557d;
+            font-size: 17px;
         }
 
 
@@ -930,13 +1009,210 @@
 
 
         /* =====================================================
+           RATING & FEEDBACK
+        ===================================================== */
+
+        .detail-photo-column {
+            width: 65%;
+            flex-shrink: 0;
+        }
+
+        .detail-photo-column .detail-photo-wrapper {
+            width: 100%;
+        }
+
+        .rating-summary {
+            padding: 18px 30px 24px;
+            background: #ffffff;
+            border-top: 1px solid #edf0f4;
+        }
+
+        .rating-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #172033;
+            margin-bottom: 7px;
+        }
+
+        .rating-main {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: 3px;
+        }
+
+        .rating-stars i {
+            color: #f5b301;
+            font-size: 19px;
+        }
+
+        .rating-number {
+            font-size: 15px;
+            font-weight: 800;
+            color: #172033;
+        }
+
+        .rating-count {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .feedback-section {
+            margin-top: 40px;
+        }
+
+        .feedback-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .feedback-more-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .btn-semua-ulasan {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 18px;
+            border: none;
+            border-radius: 11px;
+            background: #172033;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: .2s;
+        }
+
+        .btn-semua-ulasan:hover {
+            background: #31557d;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .feedback-header {
+            margin-bottom: 20px;
+        }
+
+        .feedback-title {
+            font-size: 25px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            color: #172033;
+        }
+
+        .feedback-subtitle {
+            color: #64748b;
+            margin-bottom: 0;
+        }
+
+        .feedback-card {
+            height: 100%;
+            background: #ffffff;
+            border: 1px solid #e7eaf0;
+            border-radius: 16px;
+            padding: 20px;
+            transition: .2s;
+        }
+
+        .feedback-card:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 8px 22px rgba(15, 23, 42, .07);
+        }
+
+        .feedback-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .feedback-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #eef2f7;
+            color: #31557d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .feedback-user-name {
+            font-size: 14px;
+            font-weight: 800;
+            color: #172033;
+        }
+
+        .feedback-stars {
+            display: flex;
+            gap: 2px;
+            margin-top: 3px;
+        }
+
+        .feedback-stars i {
+            font-size: 13px;
+            color: #f5b301;
+        }
+
+        .feedback-comment {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.7;
+            margin: 0;
+            white-space: pre-line;
+        }
+
+        .feedback-empty {
+            background: #ffffff;
+            border: 1px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .feedback-empty i {
+            font-size: 42px;
+            color: #94a3b8;
+        }
+
+        .feedback-empty h5 {
+            margin-top: 12px;
+            font-weight: 800;
+            color: #172033;
+        }
+
+        .feedback-empty p {
+            color: #94a3b8;
+            margin-bottom: 0;
+        }
+
+
+        /* =====================================================
            RESPONSIVE
         ===================================================== */
 
         @media (max-width: 992px) {
 
-            .detail-photo-wrapper {
+            .detail-photo-column {
                 width: 60%;
+            }
+
+            .detail-photo-wrapper {
+                width: 100%;
             }
 
 
@@ -981,6 +1257,10 @@
                 display: block;
             }
 
+
+            .detail-photo-column {
+                width: 100%;
+            }
 
             .detail-photo-wrapper {
                 width: 100%;
@@ -1060,6 +1340,19 @@
             }
 
 
+            .rating-summary {
+                padding: 16px 22px 22px;
+            }
+
+            .feedback-section {
+                margin-top: 32px;
+            }
+
+            .feedback-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 16px;
+            }
+
             .description-modal-body {
                 padding: 20px;
             }
@@ -1078,6 +1371,10 @@
 
 
         @media (max-width: 480px) {
+
+            .feedback-grid {
+                grid-template-columns: 1fr;
+            }
 
             .brand {
                 font-size: 22px;
@@ -1169,34 +1466,190 @@
      NAVBAR
 ========================================================= --}}
 
-<nav class="navbar navbar-kosku">
+<nav class="navbar navbar-expand-lg navbar-kosku">
 
     <div class="container">
 
-        <div
-            class="d-flex justify-content-between align-items-center w-100"
+        {{-- BRAND --}}
+
+        <a
+            href="{{ route('user.landing') }}"
+            class="brand"
         >
 
-            <a
-                href="{{ route('user.landing') }}"
-                class="brand"
-            >
+            Kos<span>Ku</span>
 
-                Kos<span>Ku</span>
-
-            </a>
+        </a>
 
 
-            <a
-                href="{{ route('user.landing') }}"
-                class="back-btn"
-            >
+        {{-- TOGGLE MOBILE --}}
 
-                <i class="bi bi-arrow-left me-1"></i>
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarMenu"
+            aria-controls="navbarMenu"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
 
-                Kembali
+            <span class="navbar-toggler-icon"></span>
 
-            </a>
+        </button>
+
+
+        {{-- MENU --}}
+
+        <div
+            class="collapse navbar-collapse"
+            id="navbarMenu"
+        >
+
+            <ul class="navbar-nav mx-auto">
+
+                {{-- HOME --}}
+
+                <li class="nav-item">
+
+                    <a
+                        href="{{ route('user.landing') }}#home"
+                        class="nav-link"
+                    >
+                        Home
+                    </a>
+
+                </li>
+
+
+                {{-- CARI KOS --}}
+
+                <li class="nav-item">
+
+                    <a
+                        href="{{ route('user.landing') }}#kos"
+                        class="nav-link"
+                    >
+                        Cari Kos
+                    </a>
+
+                </li>
+
+
+                {{-- KEUNGGULAN --}}
+
+                <li class="nav-item">
+
+                    <a
+                        href="{{ route('user.landing') }}#keunggulan"
+                        class="nav-link"
+                    >
+                        Keunggulan
+                    </a>
+
+                </li>
+
+
+                {{-- TENTANG --}}
+
+                <li class="nav-item">
+
+                    <a
+                        href="{{ route('user.landing') }}#tentang"
+                        class="nav-link"
+                    >
+                        Tentang
+                    </a>
+
+                </li>
+
+
+                {{-- STATUS PESANAN --}}
+
+                <li class="nav-item">
+
+                    <a
+                        href="{{ route('user.status') }}"
+                        class="nav-link"
+                    >
+                        Status Pesanan
+                    </a>
+
+                </li>
+
+
+                {{-- FEEDBACK --}}
+
+                <li class="nav-item">
+
+                    <a
+                        href="#feedback"
+                        class="nav-link"
+                    >
+                        <i class="bi bi-chat-heart me-1"></i>
+                        Feedback
+                    </a>
+
+                </li>
+
+            </ul>
+
+
+            {{-- LOGIN / LOGOUT --}}
+
+            <div class="d-flex align-items-center gap-2">
+
+                @auth
+
+                    <span class="d-none d-lg-block text-muted small">
+
+                        Hai,
+
+                        <strong>
+                            {{ Auth::user()->name }}
+                        </strong>
+
+                    </span>
+
+
+                    <form
+                        action="{{ route('logout') }}"
+                        method="POST"
+                        class="m-0"
+                    >
+
+                        @csrf
+
+                        <button
+                            type="submit"
+                            class="btn btn-login"
+                        >
+
+                            <i class="bi bi-box-arrow-right me-1"></i>
+
+                            Logout
+
+                        </button>
+
+                    </form>
+
+
+                @else
+
+                    <a
+                        href="{{ route('login') }}"
+                        class="btn btn-login"
+                    >
+
+                        <i class="bi bi-box-arrow-in-right me-1"></i>
+
+                        Login
+
+                    </a>
+
+                @endauth
+
+            </div>
 
         </div>
 
@@ -1297,10 +1750,12 @@
 
 
             {{-- =================================================
-                 FOTO KOS
+                 FOTO + RATING
             ================================================== --}}
 
-            <div class="detail-photo-wrapper">
+            <div class="detail-photo-column">
+
+                <div class="detail-photo-wrapper">
 
                 @if($kos->fotoKoss->count())
 
@@ -1436,6 +1891,63 @@
 
 
             {{-- =================================================
+                 RATING KOS
+            ================================================== --}}
+
+            @php
+                // Ambil semua feedback dari kamar yang termasuk dalam kos ini.
+                // Tidak dibatasi hanya kamar yang sedang Tersedia.
+                $feedbacks = \App\Models\Feedback::with(['user', 'kamar'])
+                    ->whereHas('kamar', function ($query) use ($kos) {
+                        $query->where('kos_id', $kos->id);
+                    })
+                    ->latest()
+                    ->get();
+
+                $ratingRataRata = $feedbacks->avg('rating') ?? 0;
+                $jumlahFeedback = $feedbacks->count();
+            @endphp
+
+            <div class="rating-summary">
+
+                <div class="rating-title">
+                    Rating & Ulasan
+                </div>
+
+                <div class="rating-main">
+
+                    <div class="rating-stars">
+
+                        @for($i = 1; $i <= 5; $i++)
+
+                            @if($ratingRataRata >= $i)
+                                <i class="bi bi-star-fill"></i>
+                            @elseif($ratingRataRata >= ($i - 0.5))
+                                <i class="bi bi-star-half"></i>
+                            @else
+                                <i class="bi bi-star"></i>
+                            @endif
+
+                        @endfor
+
+                    </div>
+
+                    <span class="rating-number">
+                        {{ number_format($ratingRataRata, 1) }}
+                    </span>
+
+                    <span class="rating-count">
+                        ({{ $jumlahFeedback }} feedback)
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+            {{-- =================================================
                  INFORMASI KOS
             ================================================== --}}
 
@@ -1521,7 +2033,7 @@
                             Nomor HP
                         </div>
 
-                        <div class="info-value">
+                        <div class="info-value info-phone">
                             {{ $kos->no_hp }}
                         </div>
 
@@ -1556,6 +2068,7 @@
                     <div class="description">
 
                         <h5>
+                            <i class="bi bi-house-heart-fill"></i>
                             Tentang Kos
                         </h5>
 
@@ -1585,6 +2098,124 @@
             </div>
 
         </div>
+
+    </div>
+
+
+    {{-- =====================================================
+         FEEDBACK PENGHUNI
+    ====================================================== --}}
+
+    <div class="feedback-section" id="feedback">
+
+        <div class="feedback-header">
+
+            <h2 class="feedback-title">
+                <i class="bi bi-chat-square-text me-2"></i>
+                Feedback Penghuni
+            </h2>
+
+            <p class="feedback-subtitle">
+                Lihat pengalaman penghuni yang pernah tinggal di kos ini.
+            </p>
+
+        </div>
+
+
+        @if($feedbacks->count())
+
+            @php
+                // Di halaman detail hanya tampilkan maksimal 8 ulasan.
+                // Susunan desktop: 4 kartu per baris × 2 baris.
+                $feedbacksPreview = $feedbacks->take(8);
+            @endphp
+
+            <div class="feedback-grid">
+
+                @foreach($feedbacksPreview as $feedback)
+
+                    <div class="feedback-card">
+
+                        <div class="feedback-user">
+
+                            <div class="feedback-avatar">
+                                {{ strtoupper(substr($feedback->user->name ?? 'U', 0, 1)) }}
+                            </div>
+
+                            <div>
+
+                                <div class="feedback-user-name">
+                                    {{ $feedback->user->name ?? 'User' }}
+                                </div>
+
+                                <div class="feedback-stars">
+
+                                    @for($i = 1; $i <= 5; $i++)
+
+                                        @if($i <= $feedback->rating)
+
+                                            <i class="bi bi-star-fill"></i>
+
+                                        @else
+
+                                            <i class="bi bi-star"></i>
+
+                                        @endif
+
+                                    @endfor
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <p class="feedback-comment">
+                            "{{ $feedback->komentar }}"
+                        </p>
+
+                    </div>
+
+                @endforeach
+
+            </div>
+
+
+            @if($feedbacks->count() > 8)
+
+                <div class="feedback-more-wrapper">
+
+                    <a
+                        href="{{ route('user.ulasan', $kos->id) }}"
+                        class="btn-semua-ulasan"
+                    >
+                        <i class="bi bi-chat-square-text"></i>
+                        Lihat Semua Ulasan
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+
+                </div>
+
+            @endif
+
+        @else
+
+            <div class="feedback-empty">
+
+                <i class="bi bi-chat-square-heart"></i>
+
+                <h5>
+                    Belum Ada Feedback
+                </h5>
+
+                <p>
+                    Belum ada penghuni yang memberikan feedback untuk kos ini.
+                </p>
+
+            </div>
+
+        @endif
 
     </div>
 

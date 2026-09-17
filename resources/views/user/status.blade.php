@@ -65,6 +65,8 @@
 
             z-index: 999;
 
+            padding: 13px 0;
+
         }
 
 
@@ -84,6 +86,94 @@
         .brand span {
 
             color: #1e3a5f;
+
+        }
+
+
+        /* NAVBAR MENU */
+
+        .navbar-menu {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            margin-left: 35px;
+
+        }
+
+
+        .navbar-menu a {
+
+            color: #475569;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            padding: 9px 13px;
+
+            border-radius: 8px;
+
+            transition: 0.2s;
+
+        }
+
+
+        .navbar-menu a:hover {
+
+            background: #f1f5f9;
+
+            color: #0f172a;
+
+        }
+
+
+        .navbar-menu a.active {
+
+            background: #e2e8f0;
+
+            color: #0f172a;
+
+        }
+
+
+        .navbar-menu a i {
+
+            margin-right: 5px;
+
+        }
+
+
+        /* USER AREA */
+
+        .navbar-user {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+        }
+
+
+        .user-name {
+
+            color: #64748b;
+
+            font-size: 13px;
+
+        }
+
+
+        .user-name strong {
+
+            color: #0f172a;
 
         }
 
@@ -780,6 +870,31 @@
 
         @media(max-width:991px) {
 
+            .navbar-menu {
+
+                margin-left: 15px;
+
+                gap: 3px;
+
+            }
+
+
+            .navbar-menu a {
+
+                padding: 8px 9px;
+
+                font-size: 13px;
+
+            }
+
+
+            .user-name {
+
+                display: none;
+
+            }
+
+
             .status-wrapper {
 
                 align-items: flex-start;
@@ -790,6 +905,55 @@
 
 
         @media(max-width:768px) {
+
+            .navbar-kosku {
+
+                padding: 12px 0;
+
+            }
+
+
+            .navbar-inner {
+
+                flex-wrap: wrap;
+
+            }
+
+
+            .navbar-menu {
+
+                width: 100%;
+
+                order: 3;
+
+                margin: 12px 0 0;
+
+                justify-content: center;
+
+                border-top: 1px solid #e2e8f0;
+
+                padding-top: 10px;
+
+            }
+
+
+            .navbar-menu a {
+
+                font-size: 12px;
+
+                padding: 7px 8px;
+
+            }
+
+
+            .btn-back {
+
+                padding: 8px 12px;
+
+                font-size: 12px;
+
+            }
+
 
             .status-section {
 
@@ -851,43 +1015,89 @@
     NAVBAR
 ========================================================= --}}
 
-<nav class="navbar navbar-expand-lg navbar-kosku">
+<nav class="navbar-kosku">
 
     <div class="container">
 
-        <a
-            href="{{ route('user.landing') }}"
-            class="brand"
-        >
+        <div class="d-flex align-items-center justify-content-between navbar-inner">
 
-            Kos<span>Ku</span>
-
-        </a>
-
-
-        <div class="d-flex align-items-center gap-3">
-
-            <span class="d-none d-md-block text-muted small">
-
-                Hai,
-
-                <strong>
-                    {{ Auth::user()->name }}
-                </strong>
-
-            </span>
-
-
+            {{-- BRAND --}}
             <a
                 href="{{ route('user.landing') }}"
-                class="btn-back"
+                class="brand"
             >
 
-                <i class="bi bi-arrow-left me-1"></i>
-
-                Kembali
+                Kos<span>Ku</span>
 
             </a>
+
+
+            {{-- MENU NAVBAR --}}
+            <div class="navbar-menu">
+
+                <a
+                    href="{{ route('user.landing') }}"
+                >
+
+                    <i class="bi bi-house-door"></i>
+
+                    Home
+
+                </a>
+
+
+
+                <a
+                    href="{{ route('user.status') }}"
+                    class="active"
+                >
+
+                    <i class="bi bi-receipt"></i>
+
+                    Status Pesanan
+
+                </a>
+
+
+                <a
+                    href="{{ route('user.pembayaran') }}"
+                >
+
+                    <i class="bi bi-credit-card"></i>
+
+                    Pembayaran
+
+                </a>
+
+            </div>
+
+
+            {{-- USER --}}
+            <div class="navbar-user">
+
+                <span class="user-name">
+
+                    Hai,
+
+                    <strong>
+                        {{ Auth::user()->name }}
+                    </strong>
+
+                </span>
+
+
+                <a
+                    href="{{ route('user.landing') }}"
+                    class="btn-back"
+                >
+
+                    <i class="bi bi-arrow-left me-1"></i>
+
+                    Kembali
+
+                </a>
+
+            </div>
 
         </div>
 

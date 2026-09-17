@@ -2147,7 +2147,7 @@ FOOTER
 
                     <i class="bi bi-telephone me-2"></i>
 
-                    08xx-xxxx-xxxx
+                    0895-0785-9177
 
                 </p>
 

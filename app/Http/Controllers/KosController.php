@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kos;
 use App\Models\Kamar;
 use App\Models\FotoKos;
+use App\Models\Feedback;
 use Illuminate\Http\Request;
 
 class KosController extends Controller
@@ -340,11 +341,47 @@ class KosController extends Controller
         $kos->load('fotoKoss');
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | AMBIL SEMUA FEEDBACK UNTUK KOS INI
+        |--------------------------------------------------------------------------
+        */
+
+        $feedbacks = Feedback::with([
+            'user',
+            'kamar',
+        ])
+        ->whereHas('kamar', function ($query) use ($kos) {
+            $query->where(
+                'kos_id',
+                $kos->id
+            );
+        })
+        ->latest()
+        ->get();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | HITUNG RATING
+        |--------------------------------------------------------------------------
+        */
+
+        $ratingRataRata =
+            $feedbacks->avg('rating') ?? 0;
+
+        $jumlahFeedback =
+            $feedbacks->count();
+
+
         return view(
             'user.kos.detail',
             compact(
                 'kos',
-                'kamars'
+                'kamars',
+                'feedbacks',
+                'ratingRataRata',
+                'jumlahFeedback'
             )
         );
     }

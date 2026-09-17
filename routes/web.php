@@ -14,6 +14,7 @@ use App\Http\Controllers\StatusController;
 use App\Http\Controllers\MetodePembayaranController;
 use App\Http\Controllers\PengajuanBerhentiController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\UlasanController;
 
 use App\Models\Kos;
 use App\Models\Pemesanan;
@@ -577,6 +578,10 @@ Route::middleware('auth')->group(function () {
         '/admin/pembayaran/{pembayaran}',
         [PembayaranController::class, 'destroy']
     )->name('admin.pembayaran.destroy');
+
+
+    Route::get('/kos/{kosId}/ulasan', [UlasanController::class, 'index'])
+    ->name('user.ulasan');
 
 
 
