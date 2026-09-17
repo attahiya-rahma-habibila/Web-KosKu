@@ -7,6 +7,9 @@ use App\Models\Pemesanan;
 use App\Models\MetodePembayaran;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Midtrans\Config;
+use Midtrans\Snap;
+use Midtrans\Notification;
 
 class PembayaranController extends Controller
 {
@@ -1418,4 +1421,220 @@ class PembayaranController extends Controller
                 'Pembayaran berhasil dikirim. Silakan tunggu konfirmasi admin.'
             );
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | HELPER - HITUNG TAGIHAN BULAN INI
+    |--------------------------------------------------------------------------
+    */
+    private function hitungTagihanBulanIni(Pemesanan $pemesanan)
+    {
+        $totalHarga = (float) $pemesanan->total_harga;
+
+        $totalSudahDibayar = (float) Pembayaran::where('pemesanan_id', $pemesanan->id)
+            ->where('status', 'berhasil')
+            ->sum('jumlah');
+
+        $sisaTagihan = max(0, $totalHarga - $totalSudahDibayar);
+
+        $durasiBulan = 0;
+        if ($pemesanan->tanggal_masuk && $pemesanan->tanggal_keluar) {
+            $durasiBulan = Carbon::parse($pemesanan->tanggal_masuk)
+                ->diffInMonths(Carbon::parse($pemesanan->tanggal_keluar));
+        }
+
+        if ($durasiBulan <= 0) {
+            return ['error' => 'Durasi pemesanan tidak dapat dihitung.'];
+        }
+
+        $cicilanBulanan = $totalHarga / $durasiBulan;
+        $tagihanBulanIni = min($cicilanBulanan, $sisaTagihan);
+
+        return [
+            'sisa_tagihan'      => $sisaTagihan,
+            'tagihan_bulan_ini' => $tagihanBulanIni,
+        ];
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | USER - GENERATE SNAP TOKEN (Bayar Online via Midtrans)
+    |--------------------------------------------------------------------------
+    */
+    public function userCreateSnapTransaction(Request $request)
+    {
+        $validated = $request->validate([
+            'pemesanan_id' => ['required', 'exists:pemesanans,id'],
+        ]);
+
+        $pemesanan = Pemesanan::with(['user', 'kamar'])
+            ->where('id', $validated['pemesanan_id'])
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (!$pemesanan) {
+            return response()->json(['message' => 'Pemesanan tidak ditemukan.'], 404);
+        }
+
+        if ($pemesanan->status !== 'dikonfirmasi') {
+            return response()->json(['message' => 'Pemesanan belum dikonfirmasi.'], 422);
+        }
+
+        $pembayaranMenunggu = Pembayaran::where('pemesanan_id', $pemesanan->id)
+            ->where('status', 'menunggu')
+            ->exists();
+
+        if ($pembayaranMenunggu) {
+            return response()->json(['message' => 'Ada pembayaran yang masih menunggu konfirmasi.'], 422);
+        }
+
+        $hitung = $this->hitungTagihanBulanIni($pemesanan);
+
+        if (isset($hitung['error'])) {
+            return response()->json(['message' => $hitung['error']], 422);
+        }
+
+        if ($hitung['sisa_tagihan'] <= 0) {
+            return response()->json(['message' => 'Pemesanan ini sudah lunas.'], 422);
+        }
+
+        $tagihanBulanIni = (int) round($hitung['tagihan_bulan_ini']);
+        $orderId = 'KOS-' . $pemesanan->id . '-' . time();
+
+        $metodeMidtrans = \App\Models\MetodePembayaran::where('is_midtrans', true)->first();
+
+        $pembayaran = Pembayaran::create([
+            'pemesanan_id'         => $pemesanan->id,
+            'metode_pembayaran_id' => $metodeMidtrans->id ?? null,
+            'jumlah'               => $tagihanBulanIni,
+            'tanggal_pembayaran'   => now(),
+            'status'               => 'menunggu',
+            'order_id'             => $orderId,
+        ]);
+
+        Config::$serverKey = config('midtrans.server_key');
+        Config::$isProduction = config('midtrans.is_production');
+        Config::$isSanitized = config('midtrans.is_sanitized');
+        Config::$is3ds = config('midtrans.is_3ds');
+
+        $params = [
+            'transaction_details' => [
+                'order_id'     => $orderId,
+                'gross_amount' => $tagihanBulanIni,
+            ],
+            'customer_details' => [
+                'first_name' => $pemesanan->user->name ?? 'Penghuni',
+                'email'      => $pemesanan->user->email ?? 'noemail@example.com',
+            ],
+            'item_details' => [[
+                'id'       => 'sewa-' . $pemesanan->id,
+                'price'    => $tagihanBulanIni,
+                'quantity' => 1,
+                'name'     => 'Cicilan Sewa Kamar ' . ($pemesanan->kamar->nama_kamar ?? ''),
+            ]],
+        ];
+
+        try {
+            $snapToken = Snap::getSnapToken($params);
+        } catch (\Exception $e) {
+            $pembayaran->delete();
+            return response()->json(['message' => 'Gagal membuat transaksi: ' . $e->getMessage()], 500);
+        }
+
+        $pembayaran->update(['snap_token' => $snapToken]);
+
+        return response()->json([
+            'snap_token' => $snapToken,
+            'order_id'   => $orderId,
+            'jumlah'     => $tagihanBulanIni,
+        ]);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | WEBHOOK - NOTIFIKASI MIDTRANS
+    |--------------------------------------------------------------------------
+    */
+    public function midtransNotification(Request $request)
+    {
+        Config::$serverKey = config('midtrans.server_key');
+        Config::$isProduction = config('midtrans.is_production');
+
+        $notif = new Notification();
+
+        $orderId = $notif->order_id;
+        $transactionStatus = $notif->transaction_status;
+        $fraudStatus = $notif->fraud_status;
+
+        $pembayaran = Pembayaran::where('order_id', $orderId)->first();
+
+        if (!$pembayaran) {
+            return response()->json(['message' => 'Order tidak ditemukan'], 404);
+        }
+
+        if ($transactionStatus == 'capture') {
+            $pembayaran->status = ($fraudStatus == 'accept') ? 'berhasil' : 'ditolak';
+        } elseif ($transactionStatus == 'settlement') {
+            $pembayaran->status = 'berhasil';
+        } elseif ($transactionStatus == 'pending') {
+            $pembayaran->status = 'menunggu';
+        } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
+            $pembayaran->status = 'ditolak';
+        }
+
+        $pembayaran->save();
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    /*
+|--------------------------------------------------------------------------
+| USER - CEK STATUS TRANSAKSI LANGSUNG KE MIDTRANS (tanpa webhook/ngrok)
+|--------------------------------------------------------------------------
+*/
+public function checkTransactionStatus(Request $request)
+    {
+        $validated = $request->validate([
+            'order_id' => ['required', 'string'],
+        ]);
+
+        $pembayaran = Pembayaran::where('order_id', $validated['order_id'])->first();
+
+        if (!$pembayaran) {
+            return response()->json(['message' => 'Order tidak ditemukan.'], 404);
+        }
+
+        // Kalau sudah final sebelumnya, gak perlu cek ulang
+        if (in_array($pembayaran->status, ['berhasil', 'ditolak'])) {
+            return response()->json(['status' => $pembayaran->status]);
+        }
+
+        Config::$serverKey = config('midtrans.server_key');
+        Config::$isProduction = config('midtrans.is_production');
+
+        try {
+            $status = \Midtrans\Transaction::status($validated['order_id']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Gagal cek status: ' . $e->getMessage()], 500);
+        }
+
+        $transactionStatus = $status->transaction_status;
+        $fraudStatus = $status->fraud_status ?? null;
+
+        if ($transactionStatus == 'capture') {
+            $pembayaran->status = ($fraudStatus == 'accept') ? 'berhasil' : 'ditolak';
+        } elseif ($transactionStatus == 'settlement') {
+            $pembayaran->status = 'berhasil';
+        } elseif ($transactionStatus == 'pending') {
+            $pembayaran->status = 'menunggu';
+        } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
+            $pembayaran->status = 'ditolak';
+        }
+
+        $pembayaran->save();
+
+        return response()->json(['status' => $pembayaran->status]);
+}
 }

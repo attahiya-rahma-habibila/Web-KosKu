@@ -23,6 +23,7 @@ class MetodePembayaran extends Model
         'atas_nama',
 
         'status',
+        'is_midtrans'
 
     ];
 

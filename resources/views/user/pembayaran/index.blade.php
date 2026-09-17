@@ -1527,6 +1527,29 @@
                                     </button>
 
 
+                                    {{-- ===== MIDTRANS: TOMBOL BAYAR ONLINE (BARU) ===== --}}
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-primary btn-pay btn-bayar-online mt-2"
+                                        data-pemesanan-id="{{ $pemesanan->id }}"
+                                    >
+
+                                        <i class="bi bi-lightning-charge-fill me-2"></i>
+
+                                        Bayar Online Rp
+                                        {{ number_format(
+                                            $tagihanBulanIni,
+                                            0,
+                                            ',',
+                                            '.'
+                                        ) }}
+
+                                    </button>
+
+                                    {{-- ===== /MIDTRANS ===== --}}
+
+
                                 @elseif($pembayaranMenunggu)
 
                                     <div class="waiting-payment">
@@ -2660,6 +2683,26 @@
 
 <script>
 
+    function cekStatusDanReload(orderId, pesan) {
+    fetch("{{ route('user.pembayaran.check-status') }}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({ order_id: orderId })
+    })
+    .then(function () {
+        alert(pesan);
+        location.reload();
+    })
+    .catch(function () {
+        alert(pesan + ' (status akan diperbarui saat halaman dimuat ulang)');
+        location.reload();
+    });
+}
+
 document.addEventListener(
     'DOMContentLoaded',
     function () {
@@ -2888,6 +2931,90 @@ document.addEventListener(
 
                     }
                 );
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+
+{{-- =========================================================
+     MIDTRANS SNAP + BAYAR ONLINE SCRIPT (BARU)
+========================================================= --}}
+
+<script
+    src="https://app.sandbox.midtrans.com/snap/snap.js"
+    data-client-key="{{ config('midtrans.client_key') }}"
+></script>
+
+<script>
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        document.querySelectorAll('.btn-bayar-online').forEach(
+            function (btn) {
+
+                btn.addEventListener('click', function () {
+
+                    const pemesananId = btn.dataset.pemesananId;
+                    const originalText = btn.innerHTML;
+
+                    btn.disabled = true;
+                    btn.innerHTML = 'Memproses...';
+
+                    fetch("{{ route('user.pembayaran.midtrans') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                        },
+                        body: JSON.stringify({ pemesanan_id: pemesananId })
+                    })
+                    .then(function (res) { return res.json(); })
+                    .then(function (data) {
+
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+
+                        if (data.snap_token) {
+
+                            window.snap.pay(data.snap_token, {
+                               onSuccess: function () {
+                                cekStatusDanReload(data.order_id, 'Pembayaran berhasil!');
+                                },
+                                onPending: function () {
+                                    cekStatusDanReload(data.order_id, 'Menunggu penyelesaian pembayaran.');
+                                },
+                                onError: function (result) {
+                                    alert('Pembayaran gagal: ' + result.status_message);
+                                },
+                                onClose: function () {
+                                    // user menutup popup tanpa selesai, tidak apa-apa
+                                 }
+                            });
+
+                        } else {
+
+                            alert(data.message || 'Gagal memulai pembayaran online.');
+
+                        }
+
+                    })
+                    .catch(function () {
+
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                        alert('Terjadi kesalahan. Coba lagi.');
+
+                    });
+
+                });
 
             }
         );

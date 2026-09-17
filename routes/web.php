@@ -278,6 +278,16 @@ Route::middleware('auth')->group(function () {
         [PembayaranController::class, 'userStore']
     )->name('user.pembayaran.store');
 
+    Route::post('/user/pembayaran/create-transaction', [PembayaranController::class, 'userCreateSnapTransaction'])
+    ->middleware('auth')
+    ->name('user.pembayaran.midtrans');
+
+    Route::post('/midtrans-notification', [PembayaranController::class, 'midtransNotification']);
+    
+    Route::post('/user/pembayaran/check-status', [PembayaranController::class, 'checkTransactionStatus'])
+    ->middleware('auth')
+    ->name('user.pembayaran.check-status');
+
 
     /*
     |--------------------------------------------------------------------------
