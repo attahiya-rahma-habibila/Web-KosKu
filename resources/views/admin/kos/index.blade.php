@@ -207,6 +207,8 @@
                                                                             src="{{ asset('kos/' . $foto->foto) }}"
                                                                             alt="{{ $item->nama_kos }}"
                                                                             class="d-block w-100 rounded"
+                                                                            loading="lazy"
+                                                                            decoding="async"
                                                                             style="
                                                                                 height:500px;
                                                                                 object-fit:contain;
@@ -318,6 +320,8 @@
                                                             src="{{ asset('kos/' . $item->foto) }}"
                                                             alt="{{ $item->nama_kos }}"
                                                             class="img-fluid rounded"
+                                                            loading="lazy"
+                                                            decoding="async"
                                                             style="
                                                                 max-height:500px;
                                                                 object-fit:contain;
@@ -331,6 +335,7 @@
                                             </div>
 
                                         </div>
+
 
                                     @else
 
@@ -807,7 +812,9 @@ STYLE
 
     border: none;
     border-radius: 20px;
+
     overflow: hidden;
+
     background: #ffffff;
 
     box-shadow:
@@ -852,6 +859,7 @@ STYLE
     color: #ffffff;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -1246,5 +1254,6 @@ document.addEventListener(
 );
 
 </script>
+
 
 @endsection

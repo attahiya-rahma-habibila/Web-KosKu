@@ -706,6 +706,125 @@
 
 
         /* =====================================================
+           POPUP NOTIFIKASI PEMBAYARAN
+        ====================================================== */
+
+        .payment-popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .payment-popup-overlay.show {
+            display: flex;
+        }
+
+        .payment-popup {
+            width: 100%;
+            max-width: 420px;
+
+            background: #ffffff;
+
+            border-radius: 18px;
+
+            padding: 30px 25px;
+
+            text-align: center;
+
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+
+            animation: popupShow 0.25s ease;
+        }
+
+        @keyframes popupShow {
+
+            from {
+                opacity: 0;
+                transform: translateY(15px) scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+
+        }
+
+        .payment-popup-icon {
+            width: 65px;
+            height: 65px;
+
+            border-radius: 50%;
+
+            margin: 0 auto 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 30px;
+        }
+
+        .payment-popup-icon.success {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .payment-popup-icon.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .payment-popup-icon.error {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .payment-popup-title {
+            font-size: 21px;
+            font-weight: 700;
+            color: #172033;
+            margin-bottom: 8px;
+        }
+
+        .payment-popup-message {
+            color: #6c757d;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 22px;
+        }
+
+        .payment-popup-button {
+            width: 100%;
+
+            border: none;
+            border-radius: 9px;
+
+            padding: 11px 15px;
+
+            background: #032456;
+            color: #ffffff;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: all 0.2s ease;
+        }
+
+        .payment-popup-button:hover {
+            background: #011b42;
+        }
+
+
+        /* =====================================================
            RESPONSIVE
         ====================================================== */
 
@@ -807,6 +926,10 @@
 
             .payment-info {
                 align-items: flex-start;
+            }
+
+            .payment-popup {
+                padding: 25px 20px;
             }
 
         }
@@ -1527,29 +1650,6 @@
                                     </button>
 
 
-                                    {{-- ===== MIDTRANS: TOMBOL BAYAR ONLINE (BARU) ===== --}}
-
-                                    <button
-                                        type="button"
-                                        class="btn btn-outline-primary btn-pay btn-bayar-online mt-2"
-                                        data-pemesanan-id="{{ $pemesanan->id }}"
-                                    >
-
-                                        <i class="bi bi-lightning-charge-fill me-2"></i>
-
-                                        Bayar Online Rp
-                                        {{ number_format(
-                                            $tagihanBulanIni,
-                                            0,
-                                            ',',
-                                            '.'
-                                        ) }}
-
-                                    </button>
-
-                                    {{-- ===== /MIDTRANS ===== --}}
-
-
                                 @elseif($pembayaranMenunggu)
 
                                     <div class="waiting-payment">
@@ -1651,6 +1751,8 @@
                                     action="{{ route('user.pembayaran.store') }}"
                                     method="POST"
                                     enctype="multipart/form-data"
+                                    class="form-pembayaran"
+                                    data-pemesanan-id="{{ $pemesanan->id }}"
                                 >
 
                                     @csrf
@@ -2001,6 +2103,7 @@
                                                         data-nama="{{ $metode->nama_metode }}"
                                                         data-nomor="{{ $metode->nomor }}"
                                                         data-atas-nama="{{ $metode->atas_nama }}"
+                                                        data-is-midtrans="{{ $metode->is_midtrans ? '1' : '0' }}"
                                                     >
 
                                                         {{ $metode->jenis }}
@@ -2137,7 +2240,10 @@
                                              BUKTI PEMBAYARAN
                                         ================================================== --}}
 
-                                        <div class="mb-3">
+                                        <div
+                                            class="mb-3"
+                                            id="buktiPembayaranWrapper{{ $pemesanan->id }}"
+                                        >
 
                                             <label class="form-label fw-semibold">
 
@@ -2148,7 +2254,7 @@
                                             <input
                                                 type="file"
                                                 name="bukti_pembayaran"
-                                                class="form-control"
+                                                class="form-control bukti-pembayaran-input"
                                                 accept=".jpg,.jpeg,.png"
                                                 required
                                             >
@@ -2668,6 +2774,57 @@
 
 
 {{-- =========================================================
+     POPUP NOTIFIKASI PEMBAYARAN
+========================================================= --}}
+
+<div
+    class="payment-popup-overlay"
+    id="paymentPopup"
+>
+
+    <div class="payment-popup">
+
+        <div
+            class="payment-popup-icon"
+            id="paymentPopupIcon"
+        >
+
+            <i id="paymentPopupIconElement"></i>
+
+        </div>
+
+
+        <div
+            class="payment-popup-title"
+            id="paymentPopupTitle"
+        >
+        </div>
+
+
+        <div
+            class="payment-popup-message"
+            id="paymentPopupMessage"
+        >
+        </div>
+
+
+        <button
+            type="button"
+            class="payment-popup-button"
+            id="paymentPopupButton"
+        >
+
+            OK
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+{{-- =========================================================
      BOOTSTRAP JS
 ========================================================= --}}
 
@@ -2678,271 +2835,7 @@
 
 
 {{-- =========================================================
-     PAYMENT METHOD SCRIPT
-========================================================= --}}
-
-<script>
-
-    function cekStatusDanReload(orderId, pesan) {
-    fetch("{{ route('user.pembayaran.check-status') }}", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json',
-        },
-        body: JSON.stringify({ order_id: orderId })
-    })
-    .then(function () {
-        alert(pesan);
-        location.reload();
-    })
-    .catch(function () {
-        alert(pesan + ' (status akan diperbarui saat halaman dimuat ulang)');
-        location.reload();
-    });
-}
-
-document.addEventListener(
-    'DOMContentLoaded',
-    function () {
-
-
-        const paymentSelects =
-            document.querySelectorAll(
-                '.payment-method-select'
-            );
-
-
-        paymentSelects.forEach(
-            function (select) {
-
-
-                select.addEventListener(
-                    'change',
-                    function () {
-
-
-                        const selectedOption =
-                            this.options[
-                                this.selectedIndex
-                            ];
-
-
-                        const pemesananId =
-                            this.dataset.pemesanan;
-
-
-                        const infoBox =
-                            document.getElementById(
-                                'paymentAccount' +
-                                pemesananId
-                            );
-
-
-                        if (!infoBox) {
-
-                            return;
-
-                        }
-
-
-                        /*
-                        |--------------------------------------------------------------------------
-                        | JIKA BELUM MEMILIH
-                        |--------------------------------------------------------------------------
-                        */
-
-                        if (
-                            !selectedOption.value ||
-                            !selectedOption.dataset.nomor
-                        ) {
-
-                            infoBox.style.display =
-                                'none';
-
-                            return;
-
-                        }
-
-
-                        /*
-                        |--------------------------------------------------------------------------
-                        | AMBIL DATA METODE
-                        |--------------------------------------------------------------------------
-                        */
-
-                        const jenis =
-                            selectedOption.dataset.jenis
-                            || '';
-
-
-                        const nama =
-                            selectedOption.dataset.nama
-                            || '';
-
-
-                        const nomor =
-                            selectedOption.dataset.nomor
-                            || '';
-
-
-                        const atasNama =
-                            selectedOption.dataset.atasNama
-                            || '';
-
-
-                        /*
-                        |--------------------------------------------------------------------------
-                        | ELEMENT
-                        |--------------------------------------------------------------------------
-                        */
-
-                        const namaElement =
-                            infoBox.querySelector(
-                                '.payment-account-name'
-                            );
-
-
-                        const nomorElement =
-                            infoBox.querySelector(
-                                '.payment-account-number'
-                            );
-
-
-                        const ownerElement =
-                            infoBox.querySelector(
-                                '.payment-account-owner'
-                            );
-
-
-                        const iconElement =
-                            infoBox.querySelector(
-                                '.payment-account-icon'
-                            );
-
-
-                        /*
-                        |--------------------------------------------------------------------------
-                        | ISI DATA
-                        |--------------------------------------------------------------------------
-                        */
-
-                        namaElement.textContent =
-                            nama;
-
-
-                        nomorElement.textContent =
-                            nomor;
-
-
-                        ownerElement.textContent =
-                            atasNama
-                            ? 'a.n. ' + atasNama
-                            : '-';
-
-
-                        /*
-                        |--------------------------------------------------------------------------
-                        | ICON
-                        |--------------------------------------------------------------------------
-                        */
-
-                        if (
-                            jenis
-                                .toLowerCase()
-                                .includes('e-wallet')
-                        ) {
-
-                            iconElement.className =
-                                'bi bi-wallet2 payment-account-icon';
-
-                        } else {
-
-                            iconElement.className =
-                                'bi bi-bank payment-account-icon';
-
-                        }
-
-
-                        /*
-                        |--------------------------------------------------------------------------
-                        | TAMPILKAN REKENING
-                        |--------------------------------------------------------------------------
-                        */
-
-                        infoBox.style.display =
-                            'block';
-
-                    }
-                );
-
-            }
-        );
-
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | RESET SAAT MODAL DITUTUP
-        |--------------------------------------------------------------------------
-        */
-
-        const modals =
-            document.querySelectorAll(
-                '.modal'
-            );
-
-
-        modals.forEach(
-            function (modal) {
-
-
-                modal.addEventListener(
-                    'hidden.bs.modal',
-                    function () {
-
-
-                        const select =
-                            modal.querySelector(
-                                '.payment-method-select'
-                            );
-
-
-                        const infoBox =
-                            modal.querySelector(
-                                '.payment-account-info'
-                            );
-
-
-                        if (select) {
-
-                            select.value = '';
-
-                        }
-
-
-                        if (infoBox) {
-
-                            infoBox.style.display =
-                                'none';
-
-                        }
-
-                    }
-                );
-
-            }
-        );
-
-    }
-);
-
-</script>
-
-
-{{-- =========================================================
-     MIDTRANS SNAP + BAYAR ONLINE SCRIPT (BARU)
+     MIDTRANS SNAP
 ========================================================= --}}
 
 <script
@@ -2950,77 +2843,906 @@ document.addEventListener(
     data-client-key="{{ config('midtrans.client_key') }}"
 ></script>
 
+
+
+{{-- =========================================================
+     PAYMENT METHOD SCRIPT
+========================================================= --}}
+
 <script>
 
-document.addEventListener(
-    'DOMContentLoaded',
-    function () {
+    /*
+    |--------------------------------------------------------------------------
+    | POPUP NOTIFIKASI
+    |--------------------------------------------------------------------------
+    */
 
-        document.querySelectorAll('.btn-bayar-online').forEach(
-            function (btn) {
+    function showPaymentPopup(
+        type,
+        title,
+        message,
+        callback
+    ) {
 
-                btn.addEventListener('click', function () {
+        const popup =
+            document.getElementById(
+                'paymentPopup'
+            );
 
-                    const pemesananId = btn.dataset.pemesananId;
-                    const originalText = btn.innerHTML;
 
-                    btn.disabled = true;
-                    btn.innerHTML = 'Memproses...';
+        const iconWrapper =
+            document.getElementById(
+                'paymentPopupIcon'
+            );
 
-                    fetch("{{ route('user.pembayaran.midtrans') }}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json',
-                        },
-                        body: JSON.stringify({ pemesanan_id: pemesananId })
-                    })
-                    .then(function (res) { return res.json(); })
-                    .then(function (data) {
 
-                        btn.disabled = false;
-                        btn.innerHTML = originalText;
+        const icon =
+            document.getElementById(
+                'paymentPopupIconElement'
+            );
 
-                        if (data.snap_token) {
 
-                            window.snap.pay(data.snap_token, {
-                               onSuccess: function () {
-                                cekStatusDanReload(data.order_id, 'Pembayaran berhasil!');
-                                },
-                                onPending: function () {
-                                    cekStatusDanReload(data.order_id, 'Menunggu penyelesaian pembayaran.');
-                                },
-                                onError: function (result) {
-                                    alert('Pembayaran gagal: ' + result.status_message);
-                                },
-                                onClose: function () {
-                                    // user menutup popup tanpa selesai, tidak apa-apa
-                                 }
-                            });
+        const titleElement =
+            document.getElementById(
+                'paymentPopupTitle'
+            );
 
-                        } else {
 
-                            alert(data.message || 'Gagal memulai pembayaran online.');
+        const messageElement =
+            document.getElementById(
+                'paymentPopupMessage'
+            );
 
-                        }
 
-                    })
-                    .catch(function () {
+        const button =
+            document.getElementById(
+                'paymentPopupButton'
+            );
 
-                        btn.disabled = false;
-                        btn.innerHTML = originalText;
-                        alert('Terjadi kesalahan. Coba lagi.');
 
-                    });
+        /*
+        |--------------------------------------------------------------------------
+        | RESET CLASS
+        |--------------------------------------------------------------------------
+        */
 
-                });
+        iconWrapper.className =
+            'payment-popup-icon';
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ICON SESUAI STATUS
+        |--------------------------------------------------------------------------
+        */
+
+        if (type === 'success') {
+
+            iconWrapper.classList.add(
+                'success'
+            );
+
+            icon.className =
+                'bi bi-check-circle-fill';
+
+        }
+
+        else if (type === 'warning') {
+
+            iconWrapper.classList.add(
+                'warning'
+            );
+
+            icon.className =
+                'bi bi-hourglass-split';
+
+        }
+
+        else {
+
+            iconWrapper.classList.add(
+                'error'
+            );
+
+            icon.className =
+                'bi bi-x-circle-fill';
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ISI POPUP
+        |--------------------------------------------------------------------------
+        */
+
+        titleElement.textContent =
+            title;
+
+
+        messageElement.textContent =
+            message;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | TAMPILKAN POPUP
+        |--------------------------------------------------------------------------
+        */
+
+        popup.classList.add(
+            'show'
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | TOMBOL OK
+        |--------------------------------------------------------------------------
+        */
+
+        button.onclick =
+            function () {
+
+                popup.classList.remove(
+                    'show'
+                );
+
+
+                if (
+                    typeof callback ===
+                    'function'
+                ) {
+
+                    callback();
+
+                }
+
+            };
+
+    }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CEK STATUS MIDTRANS
+    |--------------------------------------------------------------------------
+    */
+
+    function cekStatusDanReload(
+        orderId,
+        pesan
+    ) {
+
+        fetch(
+            "{{ route('user.pembayaran.check-status') }}",
+            {
+
+                method: 'POST',
+
+                headers: {
+
+                    'Content-Type':
+                        'application/json',
+
+                    'X-CSRF-TOKEN':
+                        '{{ csrf_token() }}',
+
+                    'Accept':
+                        'application/json',
+
+                },
+
+                body: JSON.stringify({
+
+                    order_id:
+                        orderId
+
+                })
+
+            }
+        )
+
+        .then(
+            function () {
+
+                showPaymentPopup(
+
+                    'success',
+
+                    'Pembayaran Berhasil!',
+
+                    pesan,
+
+                    function () {
+
+                        location.reload();
+
+                    }
+
+                );
+
+            }
+        )
+
+        .catch(
+            function () {
+
+                showPaymentPopup(
+
+                    'warning',
+
+                    'Pembayaran Diproses',
+
+                    pesan +
+                    ' Status pembayaran akan diperbarui saat halaman dimuat ulang.',
+
+                    function () {
+
+                        location.reload();
+
+                    }
+
+                );
 
             }
         );
 
     }
-);
+
+
+
+    document.addEventListener(
+        'DOMContentLoaded',
+        function () {
+
+
+            const paymentSelects =
+                document.querySelectorAll(
+                    '.payment-method-select'
+                );
+
+
+            paymentSelects.forEach(
+                function (select) {
+
+
+                    select.addEventListener(
+                        'change',
+                        function () {
+
+
+                            const selectedOption =
+                                this.options[
+                                    this.selectedIndex
+                                ];
+
+
+                            const pemesananId =
+                                this.dataset.pemesanan;
+
+
+                            const infoBox =
+                                document.getElementById(
+                                    'paymentAccount' +
+                                    pemesananId
+                                );
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | MIDTRANS: TOGGLE FIELD BUKTI PEMBAYARAN
+                            |--------------------------------------------------------------------------
+                            */
+
+                            const isMidtrans =
+                                selectedOption.dataset.isMidtrans === '1';
+
+
+                            const buktiWrapper =
+                                document.getElementById(
+                                    'buktiPembayaranWrapper' +
+                                    pemesananId
+                                );
+
+
+                            const buktiInput =
+                                buktiWrapper
+                                    ? buktiWrapper.querySelector(
+                                        '.bukti-pembayaran-input'
+                                    )
+                                    : null;
+
+
+                            if (buktiWrapper) {
+
+                                buktiWrapper.style.display =
+                                    isMidtrans
+                                        ? 'none'
+                                        : 'block';
+
+                            }
+
+
+                            if (buktiInput) {
+
+                                if (isMidtrans) {
+
+                                    buktiInput.removeAttribute(
+                                        'required'
+                                    );
+
+                                    buktiInput.value = '';
+
+                                }
+
+                                else {
+
+                                    buktiInput.setAttribute(
+                                        'required',
+                                        'required'
+                                    );
+
+                                }
+
+                            }
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | /MIDTRANS
+                            |--------------------------------------------------------------------------
+                            */
+
+
+                            if (!infoBox) {
+
+                                return;
+
+                            }
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | JIKA BELUM MEMILIH / MIDTRANS
+                            |--------------------------------------------------------------------------
+                            */
+
+                            if (
+                                !selectedOption.value ||
+                                !selectedOption.dataset.nomor ||
+                                isMidtrans
+                            ) {
+
+                                infoBox.style.display =
+                                    'none';
+
+                                return;
+
+                            }
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | AMBIL DATA METODE
+                            |--------------------------------------------------------------------------
+                            */
+
+                            const jenis =
+                                selectedOption.dataset.jenis
+                                || '';
+
+
+                            const nama =
+                                selectedOption.dataset.nama
+                                || '';
+
+
+                            const nomor =
+                                selectedOption.dataset.nomor
+                                || '';
+
+
+                            const atasNama =
+                                selectedOption.dataset.atasNama
+                                || '';
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | ELEMENT
+                            |--------------------------------------------------------------------------
+                            */
+
+                            const namaElement =
+                                infoBox.querySelector(
+                                    '.payment-account-name'
+                                );
+
+
+                            const nomorElement =
+                                infoBox.querySelector(
+                                    '.payment-account-number'
+                                );
+
+
+                            const ownerElement =
+                                infoBox.querySelector(
+                                    '.payment-account-owner'
+                                );
+
+
+                            const iconElement =
+                                infoBox.querySelector(
+                                    '.payment-account-icon'
+                                );
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | ISI DATA
+                            |--------------------------------------------------------------------------
+                            */
+
+                            namaElement.textContent =
+                                nama;
+
+
+                            nomorElement.textContent =
+                                nomor;
+
+
+                            ownerElement.textContent =
+                                atasNama
+                                    ? 'a.n. ' + atasNama
+                                    : '-';
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | ICON
+                            |--------------------------------------------------------------------------
+                            */
+
+                            if (
+                                jenis
+                                    .toLowerCase()
+                                    .includes('e-wallet')
+                            ) {
+
+                                iconElement.className =
+                                    'bi bi-wallet2 payment-account-icon';
+
+                            }
+
+                            else {
+
+                                iconElement.className =
+                                    'bi bi-bank payment-account-icon';
+
+                            }
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | TAMPILKAN REKENING
+                            |--------------------------------------------------------------------------
+                            */
+
+                            infoBox.style.display =
+                                'block';
+
+                        }
+                    );
+
+                }
+            );
+
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | RESET SAAT MODAL DITUTUP
+            |--------------------------------------------------------------------------
+            */
+
+            const modals =
+                document.querySelectorAll(
+                    '.modal'
+                );
+
+
+            modals.forEach(
+                function (modal) {
+
+
+                    modal.addEventListener(
+                        'hidden.bs.modal',
+                        function () {
+
+
+                            const select =
+                                modal.querySelector(
+                                    '.payment-method-select'
+                                );
+
+
+                            const infoBox =
+                                modal.querySelector(
+                                    '.payment-account-info'
+                                );
+
+
+                            if (select) {
+
+                                select.value = '';
+
+                            }
+
+
+                            if (infoBox) {
+
+                                infoBox.style.display =
+                                    'none';
+
+                            }
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | MIDTRANS: RESET FIELD BUKTI
+                            |--------------------------------------------------------------------------
+                            */
+
+                            const buktiWrapper =
+                                modal.querySelector(
+                                    '[id^="buktiPembayaranWrapper"]'
+                                );
+
+
+                            const buktiInput =
+                                modal.querySelector(
+                                    '.bukti-pembayaran-input'
+                                );
+
+
+                            if (buktiWrapper) {
+
+                                buktiWrapper.style.display =
+                                    'block';
+
+                            }
+
+
+                            if (buktiInput) {
+
+                                buktiInput.setAttribute(
+                                    'required',
+                                    'required'
+                                );
+
+                            }
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | /MIDTRANS
+                            |--------------------------------------------------------------------------
+                            */
+
+                        }
+                    );
+
+                }
+            );
+
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | MIDTRANS: INTERCEPT SUBMIT
+            |--------------------------------------------------------------------------
+            */
+
+            document
+                .querySelectorAll(
+                    '.form-pembayaran'
+                )
+                .forEach(
+                    function (form) {
+
+
+                        form.addEventListener(
+                            'submit',
+                            function (e) {
+
+
+                                const select =
+                                    form.querySelector(
+                                        '.payment-method-select'
+                                    );
+
+
+                                const selectedOption =
+                                    select.options[
+                                        select.selectedIndex
+                                    ];
+
+
+                                /*
+                                |--------------------------------------------------------------------------
+                                | JIKA MIDTRANS
+                                |--------------------------------------------------------------------------
+                                */
+
+                                if (
+                                    selectedOption.dataset.isMidtrans ===
+                                    '1'
+                                ) {
+
+                                    e.preventDefault();
+
+
+                                    const pemesananId =
+                                        form.dataset.pemesananId;
+
+
+                                    const submitBtn =
+                                        form.querySelector(
+                                            'button[type="submit"]'
+                                        );
+
+
+                                    const originalText =
+                                        submitBtn.innerHTML;
+
+
+                                    submitBtn.disabled =
+                                        true;
+
+
+                                    submitBtn.innerHTML =
+                                        'Memproses...';
+
+
+                                    fetch(
+                                        "{{ route('user.pembayaran.midtrans') }}",
+                                        {
+
+                                            method: 'POST',
+
+                                            headers: {
+
+                                                'Content-Type':
+                                                    'application/json',
+
+                                                'X-CSRF-TOKEN':
+                                                    '{{ csrf_token() }}',
+
+                                                'Accept':
+                                                    'application/json',
+
+                                            },
+
+                                            body:
+                                                JSON.stringify({
+
+                                                    pemesanan_id:
+                                                        pemesananId
+
+                                                })
+
+                                        }
+                                    )
+
+                                    .then(
+                                        function (res) {
+
+                                            return res.json();
+
+                                        }
+                                    )
+
+                                    .then(
+                                        function (data) {
+
+
+                                            submitBtn.disabled =
+                                                false;
+
+
+                                            submitBtn.innerHTML =
+                                                originalText;
+
+
+                                            /*
+                                            |--------------------------------------------------------------------------
+                                            | SNAP TOKEN BERHASIL
+                                            |--------------------------------------------------------------------------
+                                            */
+
+                                            if (
+                                                data.snap_token
+                                            ) {
+
+                                                window.snap.pay(
+                                                    data.snap_token,
+                                                    {
+
+                                                        /*
+                                                        |--------------------------------------------------------------------------
+                                                        | SUCCESS
+                                                        |--------------------------------------------------------------------------
+                                                        */
+
+                                                        onSuccess:
+                                                            function () {
+
+                                                                cekStatusDanReload(
+
+                                                                    data.order_id,
+
+                                                                    'Pembayaran berhasil!'
+
+                                                                );
+
+                                                            },
+
+
+                                                        /*
+                                                        |--------------------------------------------------------------------------
+                                                        | PENDING
+                                                        |--------------------------------------------------------------------------
+                                                        */
+
+                                                        onPending:
+                                                            function () {
+
+                                                                showPaymentPopup(
+
+                                                                    'warning',
+
+                                                                    'Pembayaran Menunggu',
+
+                                                                    'Menunggu penyelesaian pembayaran.',
+
+                                                                    function () {
+
+                                                                        location.reload();
+
+                                                                    }
+
+                                                                );
+
+                                                            },
+
+
+                                                        /*
+                                                        |--------------------------------------------------------------------------
+                                                        | ERROR
+                                                        |--------------------------------------------------------------------------
+                                                        */
+
+                                                        onError:
+                                                            function (
+                                                                result
+                                                            ) {
+
+                                                                showPaymentPopup(
+
+                                                                    'error',
+
+                                                                    'Pembayaran Gagal',
+
+                                                                    'Pembayaran tidak berhasil. ' +
+                                                                    (
+                                                                        result.status_message
+                                                                        ||
+                                                                        'Silakan coba lagi.'
+                                                                    )
+
+                                                                );
+
+                                                            },
+
+
+                                                        /*
+                                                        |--------------------------------------------------------------------------
+                                                        | CLOSE
+                                                        |--------------------------------------------------------------------------
+                                                        */
+
+                                                        onClose:
+                                                            function () {
+
+                                                                /*
+                                                                | User menutup popup Midtrans
+                                                                | tanpa menyelesaikan pembayaran.
+                                                                |
+                                                                | Tidak melakukan apa-apa.
+                                                                */
+
+                                                            }
+
+                                                    }
+                                                );
+
+                                            }
+
+                                            else {
+
+                                                showPaymentPopup(
+
+                                                    'error',
+
+                                                    'Gagal Memulai Pembayaran',
+
+                                                    data.message
+                                                    ||
+                                                    'Gagal memulai pembayaran online.'
+
+                                                );
+
+                                            }
+
+                                        }
+                                    )
+
+                                    .catch(
+                                        function () {
+
+
+                                            submitBtn.disabled =
+                                                false;
+
+
+                                            submitBtn.innerHTML =
+                                                originalText;
+
+
+                                            showPaymentPopup(
+
+                                                'error',
+
+                                                'Terjadi Kesalahan',
+
+                                                'Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.'
+
+                                            );
+
+                                        }
+                                    );
+
+                                }
+
+
+                                /*
+                                |--------------------------------------------------------------------------
+                                | BUKAN MIDTRANS
+                                |--------------------------------------------------------------------------
+                                |
+                                | Form tetap submit normal untuk
+                                | pembayaran manual.
+                                |
+                                |--------------------------------------------------------------------------
+                                */
+
+                            }
+                        );
+
+                    }
+                );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | /MIDTRANS
+            |--------------------------------------------------------------------------
+            */
+
+        }
+    );
 
 </script>
 
